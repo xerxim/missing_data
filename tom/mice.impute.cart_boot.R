@@ -1,3 +1,5 @@
+#Only works for numreic covariates so far, working on else (Line 43 etc)
+
 mice.impute.cart_boot <- function (y, ry, x, wy = NULL, minbucket = 5, cp = 1e-04, ...) 
 {
     #install.on.demand("rpart")
