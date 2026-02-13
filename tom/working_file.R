@@ -1,3 +1,4 @@
+pacman::p_load(mice)
 
 source("tom/helper_functions_mean_estimation.R")
 
