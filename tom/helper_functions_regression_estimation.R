@@ -93,7 +93,8 @@ run_mc <- function(S = 100, n = 300, missing_prop = 0.5, m = 10) {
 
   for (s in 1:S) {
 
-    cat("Simulation", s, "of", S, "\n")
+    flush.console()
+    #cat("Simulation", s, "of", S, "\n")
 
     dat <- make_data(n, missing_prop)
 
