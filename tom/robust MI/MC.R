@@ -264,7 +264,8 @@ for(r in 1:R) {
                     coverage(true_quant, ana_rf_quant[2], ana_rf_quant[3]))
 }
 
-
+#Export MC Result Dataframes
+#save(resBD, resMIcart, resMIcartboot, resMImidas, resMInorm, resMIpmm, resMIrf, file = "tom/robust MI/mc_raw_results.RData")
 
 Bias <- Coverage <- matrix(nrow=2, ncol=7)
 colnames(Bias) <- colnames(Coverage) <- c("BD","pmm","midas","norm","cart","cart_boot","rf")
@@ -315,6 +316,19 @@ alles <- rbind(
       cbind(rep("PMM", nrow(resMIpmm)),
       resBD ),
       cbind(rep("RF", nrow(resMIrf)),
-      resBD ),
+      resBD )
 
-)
+) %>% data.frame()
+
+
+alles <- alles %>%
+  mutate(across(-1, as.numeric))
+
+
+colnames(alles)[1] <- "methode"
+
+ggplot(alles, aes(x = methode, y = relBias_mean))+
+  geom_boxplot()+
+   geom_hline(yintercept =  0, lty = 2)+
+  theme_classic()
+
