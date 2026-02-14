@@ -1,6 +1,6 @@
 #MC STUDY
 pacman::p_load("VIM","mice","MASS","tidyverse","paletteer")
-source("tom/vc_mcstudy_helper.R")
+source("tom/linear MI/vc_mcstudy_helper.R")
 source("tom/mice.impute.cart_boot.R")
 
 trueMean <- 12.8
