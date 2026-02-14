@@ -7,7 +7,7 @@ trueMean <- 12.8
 trueBetas <-  c(5, 0.6, 0.5)
 
 nIter <- 200
-n <- 700
+n <- 300
 M <- 10
 
 combined_results <- data.frame()
@@ -16,7 +16,6 @@ parameter = c("mu", "beta[0]", "beta[1]", "beta[2]")
 #MC mit Linearen Daten
 for (i in 1:nIter) {    
   
-  set.seed(161)
 
   if(i%%10 == 0){
     flush.console()
@@ -39,6 +38,12 @@ for (i in 1:nIter) {
     obsind <- which(!is.na(MISS_dat$X3))
     n.obs <- length(obsind)
     
+      ### Generate missing values in X2
+    misind2 <- sample(1:n,round(n/4))
+    MISS_dat$X2[misind2] <- NA
+    obsind2 <- which(!is.na(MISS_dat$X2))
+    n.obs <- length(obsind)
+  
   #Fit on full data
   fit_full <- lm(X3~X1+ X2, BD_dat)
   summary(fit_full) 
@@ -218,7 +223,6 @@ mu_star
 
 for (i in 1:nIter) {    
   
-  set.seed(161)
 
   if(i%%10 == 0){
     flush.console()
