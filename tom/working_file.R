@@ -3,7 +3,7 @@ pacman::p_load(mice)
 #### V2
 source("tom/helper_functions_regression_estimation.R")
 
-res <- run_mc(S = 1000, n = 300, missing_prop = 0.5)
+res <- run_mc(S = 100, n = 300, missing_prop = 0.5)
 
 #coverage
 
@@ -12,6 +12,8 @@ coverage <- c("Coverage",colMeans(res[,c("cart_cover","boot_cover")]))
 
 #bias
 bias <- c("Bias", colMeans(res[,c("cart_est","boot_est")]) - 2)
+
+
 
 #rmse
 rmse <- c("rmse", sqrt(colMeans((res[,c("cart_est","boot_est")] - 2)^2)))
