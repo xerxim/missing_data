@@ -41,13 +41,13 @@ mice.impute.cart_boot <- function (y, ry, x, wy = NULL, minbucket = 5, cp = 1e-0
             1), numeric(1))
     }
     else {
-        cat.has.all.obs <- table(yobs) == sum(ry)
+        cat.has.all.obs <- table(y_boot) == sum(ry)
         if (any(cat.has.all.obs)) {
-            return(rep(levels(yobs)[cat.has.all.obs], sum(wy)))
+            return(rep(levels(y_boot)[cat.has.all.obs], sum(wy)))
         }
-        xy <- cbind(yobs, xobs)
+        xy <- cbind(y_boot, x_boot)
         xy <- droplevels(xy)
-        fit <- rpart::rpart(yobs ~ ., data = xy, method = "class", 
+        fit <- rpart::rpart(y_boot ~ ., data = xy, method = "class", 
             control = rpart::rpart.control(minbucket = minbucket, 
                 cp = cp, ...))
         nodes <- predict(object = fit, newdata = xmis)
