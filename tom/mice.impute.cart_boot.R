@@ -15,14 +15,15 @@ mice.impute.cart_boot <- function (y, ry, x, wy = NULL, minbucket = 5, cp = 1e-0
     xmis <- data.frame(x[wy, , drop = FALSE])
     yobs <- y[ry]
     
-  #BOOTSTRAPPING Einschub
-  
+    # BOOTSTRAPPING Einschub
     n_obs <- length(yobs)
 
     boot_id <- sample.int(n_obs, size = n_obs, replace = TRUE)
 
     y_boot <- yobs[boot_id]
     x_boot <- xobs[boot_id, , drop = FALSE]
+
+    boot_ry <- ry[boot_id]
 
     dat_boot <- data.frame(y = y_boot, x_boot)
   
@@ -42,7 +43,7 @@ mice.impute.cart_boot <- function (y, ry, x, wy = NULL, minbucket = 5, cp = 1e-0
     }
     #TODO
     else {
-        cat.has.all.obs <- table(y_boot) == sum(ry)
+        cat.has.all.obs <- table(y_boot) == sum(boot_ry)
         if (any(cat.has.all.obs)) {
             return(rep(levels(y_boot)[cat.has.all.obs], sum(wy)))
         }
