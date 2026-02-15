@@ -40,6 +40,7 @@ mice.impute.cart_boot <- function (y, ry, x, wy = NULL, minbucket = 5, cp = 1e-0
         impute <- vapply(seq_along(donor), function(s) sample(donor[[s]], 
             1), numeric(1))
     }
+    #TODO
     else {
         cat.has.all.obs <- table(y_boot) == sum(ry)
         if (any(cat.has.all.obs)) {
