@@ -46,7 +46,7 @@ for (i in 1:nIter) {
   
   #Fit on full data
   fit_full <- lm(X3~X1+ X2, BD_dat)
-  summary(fit_full) 
+
   sample_estimates <- c(mean(BD_dat$X3),fit_full$coefficients)
   sample_estimates
 
@@ -272,7 +272,6 @@ MISS_dat <- BD_dat
     
   #Fit on full data
   fit_full <- lm(X3~X1+ X2, BD_dat)
-  summary(fit_full) 
   sample_estimates <- c(mean(BD_dat$X3),fit_full$coefficients)
   sample_estimates
 
