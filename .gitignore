@@ -53,3 +53,5 @@ rsconnect/
 
 # Positron
 .vscode
+
+.DS_Store
