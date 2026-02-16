@@ -127,7 +127,11 @@ make_missing <- function(
   data
 }
 
-generate_data <- function(n) {
+generate_data <- function(n, seed = None) {
+  # Set seed.
+  if(!is.null(seed)) set.seed(seed)
+  
+  # Create fixed variables.
   X1 <- rnorm(n, 8, 3)
   X2 <- 10 - 0.5 * X1 + rnorm(n, 0, 3)
   X3 <- 5 + 0.6 * X1 + 0.5 * X2 + rnorm(n, 0, sqrt(2))
