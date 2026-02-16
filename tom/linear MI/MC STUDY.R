@@ -6,14 +6,24 @@ source("tom/mice.impute.cart_boot.R")
 trueMean <- 12.8
 trueBetas <-  c(5, 0.6, 0.5)
 
-nIter <- 200
-n <- 300
+nIter <- 300
+n <- 500
 M <- 10
+proportion_missing_in_X3 <- 0.8
+
+#always MAR
+proportion_missing_in_X2 <- 0.2
+proportion_missing_in_X1 <- 0.2
+
+#for X3
+missing_mechanism <- "MAR"
 
 combined_results <- data.frame()
 parameter = c("mu", "beta[0]", "beta[1]", "beta[2]")
 
 #MC mit Linearen Daten
+set.seed(161)
+
 for (i in 1:nIter) {    
   
 
@@ -32,21 +42,69 @@ for (i in 1:nIter) {
   #Data with Missing
   MISS_dat <- BD_dat
     
+  if (missing_mechanism == "MCAR"){
+
     ### Generate missing values
-    misind <- sample(1:n,round(n/2))
+    misind <- sample(1:n,round(n*proportion_missing_in_X3))
     MISS_dat$X3[misind] <- NA
     obsind <- which(!is.na(MISS_dat$X3))
     n.obs <- length(obsind)
     
       ### Generate missing values in X2
-    misind2 <- sample(1:n,round(n/4))
+    misind2 <- sample(1:n,round(n*proportion_missing_in_X2))
     MISS_dat$X2[misind2] <- NA
     obsind2 <- which(!is.na(MISS_dat$X2))
     n.obs <- length(obsind)
   
+        ### Generate missing values in X1
+    misind1 <- sample(1:n,round(n*proportion_missing_in_X1))
+    MISS_dat$X1[misind1] <- NA
+    obsind1 <- which(!is.na(MISS_dat$X1))
+    n.obs <- length(obsind)
+
+  }
+    
+  if(missing_mechanism == "MAR"){
+    ## ----- MAR Missingness Mechanism -----
+## Missingness depends ONLY on observed covariates (X1, X2)
+
+# linear predictor controlling missingness
+lp <- -1.2 + 0.15 * X1 - 0.25 * X2
+
+# convert to probabilities via logistic link
+p_miss <- plogis(lp)
+
+# scale probabilities to hit desired overall proportion
+p_miss <- p_miss * proportion_missing_in_X3 / mean(p_miss)
+
+p_miss[p_miss > 0.95] <- 0.95  # numerical safety
+
+# draw missingness indicator
+R3 <- rbinom(n, size = 1, prob = 1 - p_miss)
+# R3 = 1 observed, 0 missing
+
+MISS_dat$X3[R3 == 0] <- NA
+
+obsind <- which(R3 == 1)
+n.obs  <- length(obsind)
+
+          ### Generate missing values in X2
+    misind2 <- sample(1:n,round(n*proportion_missing_in_X2))
+    MISS_dat$X2[misind2] <- NA
+    obsind2 <- which(!is.na(MISS_dat$X2))
+    n.obs <- length(obsind)
+  
+        ### Generate missing values in X1
+    misind1 <- sample(1:n,round(n*proportion_missing_in_X1))
+    MISS_dat$X1[misind1] <- NA
+    obsind1 <- which(!is.na(MISS_dat$X1))
+    n.obs <- length(obsind)
+  }
+
+  
   #Fit on full data
   fit_full <- lm(X3~X1+ X2, BD_dat)
-  summary(fit_full) 
+
   sample_estimates <- c(mean(BD_dat$X3),fit_full$coefficients)
   sample_estimates
 
@@ -152,9 +210,52 @@ for (i in 1:nIter) {
   )
   
   combined_results <- rbind(combined_results, res_cart_boot)
+
+  #4 Regression on complete obs
+  reg_fits <- lm(X3 ~ X1 +X2, data = MISS_dat)
+
+  coef_CI_com <- confint(reg_fits)
+  betas_covered_com <- (coef_CI_com[,1] <= trueBetas & coef_CI_com[,2] >= trueBetas)
+
+  muCI_com <- t.test(MISS_dat$X3)$conf.int
+  mu_covered_com <- (muCI_com[1] <= trueMean & muCI_com[2] >= trueMean)
+
+  estimates_com <- c(mean(MISS_dat$X3, na.rm = T),reg_fits[[1]]) %>% unlist
+
+  rel_biases_com <- calc_rel_bias(c(trueMean, trueBetas),
+                              estimates_com) %>% unlist 
+    
+  res_reg_firs <- data.frame(
+    parameter = parameter,
+    method = rep("OLS on complete Obs", 4),
+    estimates = estimates_com,
+    true_values = c(trueMean, trueBetas),
+    coverage = c(mu_covered_com, betas_covered_com) %>% as.numeric(),
+    relative_bias = rel_biases_com
+    ) 
+  
+  combined_results <- rbind(combined_results, res_reg_firs)
   
 }
 
+lm(X3 ~ X1 +X2, data = MISS_dat)
+
+
+
+#last_imp  <- complete(imp)
+#last_imp["X3_imp"] <- "Observed"
+#last_imp[misind3,"X3_imp"] <- "Imputed"
+
+#last_imp["true_X3"] <- NA
+#true <- BD_dat[misind3, "X3"]
+#last_imp[misind3,"true_X3"] <- true
+
+#ggplot(last_imp)+
+  #geom_point(aes(X1, X3))+
+  #geom_point(aes(X1, true_X3), color = "darkgreen", alpha = 0.3)+
+  #geom_hline(yintercept = mu_star)+
+  #geom_hline(yintercept = mean(last_imp$X3), linetype = "dashed", color = "red", linewidth = 0.8)+
+  #theme_classic()
 
 
 df_summary_cov <- combined_results %>%
@@ -165,11 +266,15 @@ df_summary_cov
 
 #Subtitle
 dgp_label_txt <- paste(
-  "Target: X3",
-  "X1 ~ N(8, 3^2)",
-  "X2 = 10 - 0.5·X1 + e2,  e2 ~ N(0, 3^2)",
-  "X3 = 5 + 0.6·X1 + 0.5·X2 + e3,  e3 ~ N(0, 2)",
-  sep = "\n"
+  "Target: X3 ~X1+ X2 \n",
+  "X1 ~ N(8, 3^2) \n",
+  "X2 = 10 - 0.5·X1 + e2,  e2 ~ N(0, 3^2) \n",
+  "X3 = 5 + 0.6·X1 + 0.5·X2 + e3,  e3 ~ N(0, 2) \n",
+  "MC Simulations:", nIter, "n:", n, "M:",M, " \n",
+  "Missings in X3:", proportion_missing_in_X3*100,"% \n",
+  "Missingsin X2:", proportion_missing_in_X2*100,"% \n",
+  "Missingsin X1:", proportion_missing_in_X1*100,"% \n",
+  "Mechanism:", missing_mechanism
 )
 
 
@@ -196,11 +301,6 @@ ggplot(combined_results, aes(x = parameter, y = relative_bias, fill = method))+
          title ="Lineare Daten",
          subtitle = dgp_label_txt)+
   scale_x_discrete(labels = function(l) parse(text=l))
-
-
-
-
-
 
 
 #MC mit nicht linearen Daten
@@ -264,15 +364,26 @@ MISS_dat <- BD_dat
   #Data with Missing
   MISS_dat <- BD_dat
     
-    ### Generate missing values
-    misind <- sample(1:n,round(n/2))
-    MISS_dat$X3[misind] <- NA
-    obsind <- which(!is.na(MISS_dat$X3))
-    n.obs <- length(obsind)
+    ### Generate missing values X3
+    misind3 <- sample(1:n,round(n*proportion_missing_in_X3))
+    MISS_dat$X3[misind3] <- NA
+    obsind3 <- which(!is.na(MISS_dat$X3))
+    n.obs3 <- length(obsind3)
     
+      ### Generate missing values X2
+    misind2 <- sample(1:n,round(n*proportion_missing_in_X2))
+    MISS_dat$X2[misind2] <- NA
+    obsind2 <- which(!is.na(MISS_dat$X2))
+    n.obs2 <- length(obsind2)
+  
+        ### Generate missing values X1
+    misind1 <- sample(1:n,round(n*proportion_missing_in_X1))
+    MISS_dat$X1[misind1] <- NA
+    obsind1 <- which(!is.na(MISS_dat$X1))
+    n.obs1 <- length(obsind1)
+  
   #Fit on full data
   fit_full <- lm(X3~X1+ X2, BD_dat)
-  summary(fit_full) 
   sample_estimates <- c(mean(BD_dat$X3),fit_full$coefficients)
   sample_estimates
 
@@ -381,10 +492,23 @@ MISS_dat <- BD_dat
   
 }
 
+
+
+
 df_summary_cov_nl <- combined_results %>%
   group_by(parameter, method) %>%
   summarise(coverage = mean(coverage, na.rm = TRUE))
 
+
+#Subtitle
+dgp_label_txt_nonl <- paste(
+  "Target: X3 ~X1+ X2 \n",
+  "MC Simulations:", nIter, "n:", n, "M:",M, " \n",
+  "Missings in X3:", proportion_missing_in_X3*100,"% \n",
+  "Missingsin X2:", proportion_missing_in_X2*100,"% \n",
+  "Missingsin X1:", proportion_missing_in_X1*100,"% \n",
+  "Mechanism:", missing_mechanism
+)
 
 ggplot(df_summary_cov_nl, aes(x = parameter, y = coverage, fill = method))+
  geom_bar(position = "dodge", stat = "identity", color = "gray80")+
@@ -393,7 +517,8 @@ ggplot(df_summary_cov_nl, aes(x = parameter, y = coverage, fill = method))+
   scale_fill_paletteer_d("wesanderson::AsteroidCity1")+
   labs(x = "Parameter", 
        y = "Coverage",
-       title ="Nichtlineare Daten")+
+       title ="Nichtlineare Daten",
+      subtitle = dgp_label_txt_nonl)+
    scale_x_discrete(labels = function(l) parse(text=l))
   
 
@@ -405,7 +530,8 @@ ggplot(combined_results, aes(x = parameter, y = relative_bias, fill = method))+
   scale_fill_paletteer_d("wesanderson::AsteroidCity1")+
     labs(x = "Parameter", 
          y = "Rel. Bias",
-         title ="Nichtlineare Daten")+
+         title ="Nichtlineare Daten",
+        subtitle = dgp_label_txt_nonl)+
   scale_x_discrete(labels = function(l) parse(text=l))
 
 
