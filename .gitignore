@@ -50,3 +50,6 @@ rsconnect/
 
 # envirionment variables file
 .env
+
+# Positron
+.vscode
