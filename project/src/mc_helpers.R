@@ -127,7 +127,7 @@ make_missing <- function(
   data
 }
 
-generate_data <- function(n, seed = None) {
+generate_data <- function(n, seed = NULL) {
   # Set seed.
   if(!is.null(seed)) set.seed(seed)
   
