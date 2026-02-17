@@ -4,35 +4,36 @@ helpers <- new.env()
 sys.source("project/src/mc_helpers.R", envir = helpers)
 
 # Code:
+#' Compare different mice methods.
+#' 
+#' @description This function compares different mice methods using a
+#' mc study. It generates data and missisng values on its own.
+#' 
+#' @param methods character. Method(s) to compare.
+#' @param m integer. Number of imputation every mice call.
+#' @param formula character(1). LM formula for imputed and pooled data.
+#' @param true_vals named numeric. Vector with true parameters of linear relationship.
+#' @param n integer(1). Size of dataset.
+#' @param cycles integer(1). Number of mc cycles.
+#' @param miss_vars character. Name(s) of column(s) to generate missings for.
+#' @param miss character. Vector or string with same dimensions as miss_vars. 
+#'                        Missing method that should be applied for every var.
+#' @param miss_rates numeric. Vector of numerics or single numeric between 0 and 1 with
+#'                            same dimensions as miss_vars. Proportion of variable that
+#'                            should be missing. 
+#' @param miss_aux character. Only needed if one or more "miss" are set to "MAR". Vector
+#'                            or string with same dimensions as miss_vars. Name of column
+#'                            that influences missings for the corresponing column.
+#' @param seed numeric(1). Optional seed for reproducable rng.
+#'
+#' @return Summary for every cycle in one dataframe.
+#' @export
 mc_study <- function(
   methods, m, formula, true_vals,
   n, cycles, 
   miss_vars, miss, miss_rates, miss_aux = NULL, 
-  seed = NULL
-){
-  #' Compare different mice methods.
-  #' 
-  #' @description This function compares different mice methods using a
-  #' mc study. It generates data and missisng values on its own.
-  #' 
-  #' @param methods character. Method(s) to compare.
-  #' @param m integer. Number of imputation every mice call.
-  #' @param formula character(1). LM formula for imputed and pooled data.
-  #' @param true_vals named numeric. Vector with true parameters of linear relationship.
-  #' @param n integer(1). Size of dataset.
-  #' @param cycles integer(1). Number of mc cycles.
-  #' @param miss_vars character. Name(s) of column(s) to generate missings for.
-  #' @param miss character. Vector or string with same dimensions as miss_vars. 
-  #'                        Missing method that should be applied for every var.
-  #' @param miss_rates numeric. Vector of numerics or single numeric between 0 and 1 with
-  #'                            same dimensions as miss_vars. Proportion of variable that
-  #'                            should be missing. 
-  #' @param miss_aux character. Only needed if one or more "miss" are set to "MAR". Vector
-  #'                            or string with same dimensions as miss_vars. Name of column
-  #'                            that influences missings for the corresponing column.
-  #' @param seed numeric(1). Optional seed for reproducable rng.
-  #' @return Summary for every cycle in one dataframe.
-  
+  seed = NA
+){ 
   # Check args.
 
   # Initalize variables.
@@ -44,7 +45,10 @@ mc_study <- function(
   # Iterate over cycles.
   for(c in (1:cycles)){
     # Generate Data.
-    data <- helpers$generate_data(n = n)
+    if(!is.null(seed)) {
+      seed <- seed + c
+    }
+    data <- helpers$generate_data(n = n, seed = seed)
     # Create missings.
     data_w_na <- helpers$make_missing(
       data, vars = miss_vars,
@@ -56,7 +60,7 @@ mc_study <- function(
       # Imputation.
       imp <- mice::mice(
         data_w_na, m = m, method = method,
-        printFlag = FALSE
+        printFlag = FALSE, seed = seed
       )
       # Fit.
       fit <- with(imp, lm(as.formula(formula)))
@@ -99,12 +103,5 @@ mc_study <- function(
   results_df
 }
 
-t <- mc_study(
-  c("cart", "pmm"), 30, "X3 ~ X1 +X2",
-  c("(Intercept)"=5, "X1"=8, "X2"=6, "X3"=12.8), 
-  500, 10, c("X1", "X2", "X3"), 
-  "MCAR", c(0.2, 0.5, 0.3), NULL, NULL
-)
-t
 
 
