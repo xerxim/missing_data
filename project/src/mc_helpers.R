@@ -68,7 +68,7 @@ check_args <- function(data, vars, methods, rates, aux = NULL, seed = NULL){
 
 
   # seed must be single numeric value if provided
-  if(!is.null(seed)){
+  if(!is.na(seed)){
     if(length(seed) != 1 || !is.numeric(seed))
       stop("`seed` must be a single numeric value.")
   }

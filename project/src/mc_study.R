@@ -7,7 +7,7 @@ sys.source("project/src/mc_helpers.R", envir = helpers)
 #' Compare different mice methods.
 #' 
 #' @description This function compares different mice methods using a
-#' mc study. It generates data and missisng values on its own.
+#' mc study. It generates data and missing values on its own.
 #' 
 #' @param methods character. Method(s) to compare.
 #' @param m integer. Number of imputation every mice call.
@@ -183,7 +183,6 @@ fit_means <- function(
 
   means_df
 }
-
 
 fit_means_old <- function(
   imp, vars, method, cycle
