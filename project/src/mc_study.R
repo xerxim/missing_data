@@ -29,8 +29,15 @@ sys.source("project/src/mc_helpers.R", envir = helpers)
 #'                            that influences missings for the corresponing column.
 #' @param seed numeric(1). Optional seed for reproducable rng.
 #'
-#' @return Summary for every cycle in one dataframe.
-#' @export
+#' @return A list containing two data frames:
+#' \describe{
+#'   \item{estimates}{Pooled regression results for each cycle and method.
+#'   Includes parameter estimates, standard errors, confidence intervals,
+#'   bias, and coverage for the model defined by `formula`.}
+#'   \item{means}{Pooled mean estimates for each specified variable, cycle,
+#'   and method based on intercept-only models. Includes standard errors,
+#'   confidence intervals, bias, and coverage compared to `true_means`.}
+#' }#' @export
 mc_study <- function(
   methods, m, formula, true_vals, true_means,
   n, cycles, data_generator = helpers$generate_data,
