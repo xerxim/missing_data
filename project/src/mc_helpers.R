@@ -79,7 +79,7 @@ check_args <- function(data, vars, methods, rates, aux = NULL, seed = NULL){
 }
 
 make_missing <- function(
-  data, vars, methods, rates, aux = NULL, seed = NULL
+  data, vars, methods, rates, aux = NULL, seed = NA
 ) {
   # Check paras.
   args <- check_args(data, vars, methods, rates, aux, seed)
@@ -87,7 +87,7 @@ make_missing <- function(
   rates <- args$rates
   aux <- args$aux
   # Set seed.
-  if(!is.null(seed)) set.seed(seed)
+  if(!is.na(seed)) set.seed(seed)
   # Set constants.
   logit <- function(x) 1/(1+exp(-x))
   
@@ -127,9 +127,9 @@ make_missing <- function(
   data
 }
 
-generate_data <- function(n, seed = NULL) {
+generate_data <- function(n, seed = NA) {
   # Set seed.
-  if(!is.null(seed)) set.seed(seed)
+  if(!is.na(seed)) set.seed(seed)
   
   # Create fixed variables.
   X1 <- rnorm(n, 8, 3)
