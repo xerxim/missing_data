@@ -69,11 +69,7 @@ t_50mX3 <- mc$mc_study(
 
 # put your data frames in a list
 mc_raw_mcar_missingX3 <- list(
-  rbind(t_10mX3[[1]],t_10mX3[[2]]),
-  rbind(t_20mX3[[1]],t_20mX3[[2]] ),
-  rbind(t_30mX3[[1]],t_30mX3[[2]] ),
-  rbind(t_40mX3[[1]],t_40mX3[[2]] ),
-  rbind(t_50mX3[[1]],t_50mX3[[2]] )
+  t_10mX3, t_20mX3, t_30mX3, t_40mX3, t_50mX3
 )
 
 rm(t_10mX3, t_20mX3, t_30mX3, t_40mX3, t_50mX3)
@@ -191,12 +187,10 @@ mcar_all_missing_X3_50 <- mc$mc_study(
 ##### PLOTTING
 
 
-mc_raw_mcar_missingAll <- list(
-  rbind(mcar_all_missing_X3_10[[1]],mcar_all_missing_X3_10[[2]]),
-  rbind(mcar_all_missing_X3_20[[1]],mcar_all_missing_X3_20[[2]]),
-  rbind(mcar_all_missing_X3_30[[1]],mcar_all_missing_X3_30[[2]]),
-  rbind(mcar_all_missing_X3_40[[1]],mcar_all_missing_X3_40[[2]]),
-  rbind(mcar_all_missing_X3_50[[1]],mcar_all_missing_X3_50[[2]])
+mc_raw_mcar_missingAll <- list(mcar_all_missing_X3_10,
+  mcar_all_missing_X3_20,
+  mcar_all_missing_X3_30,
+  mcar_all_missing_X3_40
 )
 
 rm(mcar_all_missing_X3_10,
@@ -332,13 +326,14 @@ mar_x3_missing_X3_50 <- mc$mc_study(
 ##### PLOTTING
 
 # put your data frames in a list
-mc_raw_mar_missingX3 <- list(
-  rbind(mar_x3_missing_X3_10[[1]],mar_x3_missing_X3_10[[2]]),
-  rbind(mar_x3_missing_X3_20[[1]],mar_x3_missing_X3_20[[2]]),
-  rbind(mar_x3_missing_X3_30[[1]],mar_x3_missing_X3_30[[2]]),
-  rbind(mar_x3_missing_X3_40[[1]],mar_x3_missing_X3_40[[2]]),
-  rbind(mar_x3_missing_X3_50[[1]],mar_x3_missing_X3_50[[2]])
+mc_raw_mar_missingX3 <- list(mar_x3_missing_X3_10,mar_x3_missing_X3_20,
+  mar_x3_missing_X3_30,mar_x3_missing_X3_40,mar_x3_missing_X3_50
 )
+
+rm(mar_x3_missing_X3_10,mar_x3_missing_X3_20,
+  mar_x3_missing_X3_30,mar_x3_missing_X3_40,mar_x3_missing_X3_50
+)
+
 
 # process each df and return a list of summarised tibbles
 mar_x3_missing_raw <- lapply(seq_along(mc_raw_mar_missingX3), function(k) {
@@ -408,57 +403,63 @@ mar_all_missing_X3_10 <- mc$mc_study(
    miss_rates = c(0.2,0.5,0.1), miss_aux = c("X1","X2","X1"), seed = 161
 )
 
-mar_all_missing_X3_20 <- mc$mc_study(
+mar_all_missing_X3_20 <-  mc$mc_study(
   methods = c("cart","cart_boot", "pmm"), m = 30, 
   formula = "X3 ~ X1 +X2",
   c("(Intercept)"=5, "X1"=0.6, "X2"=0.5),
   c("X3" = 12.8), 
   n = 500, cycles =  mc_cycles,
+  miss_vars =c("X1","X2","X3"), 
   miss = c("MCAR", "MCAR", "MAR"),
-   miss_rates = c(0.2,0.5,0.2), miss_aux = c("X3"), seed = 161
+   miss_rates = c(0.2,0.5,0.2), miss_aux = c("X1","X2","X1"), seed = 161
 )
 
-mar_all_missing_X3_30 <- mc$mc_study(
+mar_all_missing_X3_30 <-  mc$mc_study(
   methods = c("cart","cart_boot", "pmm"), m = 30, 
   formula = "X3 ~ X1 +X2",
   c("(Intercept)"=5, "X1"=0.6, "X2"=0.5),
   c("X3" = 12.8), 
   n = 500, cycles =  mc_cycles,
   miss_vars =c("X1","X2","X3"), 
-  miss = "MAR", miss_rates = c(0.2,0.5,0.3), miss_aux = c("X1","X2","X3"), seed = 161
+  miss = c("MCAR", "MCAR", "MAR"),
+   miss_rates = c(0.2,0.5,0.3), miss_aux = c("X1","X2","X1"), seed = 161
 )
 
-mar_all_missing_X3_40 <- mc$mc_study(
+mar_all_missing_X3_40 <-  mc$mc_study(
   methods = c("cart","cart_boot", "pmm"), m = 30, 
   formula = "X3 ~ X1 +X2",
   c("(Intercept)"=5, "X1"=0.6, "X2"=0.5),
   c("X3" = 12.8), 
   n = 500, cycles =  mc_cycles,
   miss_vars =c("X1","X2","X3"), 
-  miss = "MAR", miss_rates = c(0.2,0.5,0.4), miss_aux = c("X1","X2","X3"), seed = 161
+  miss = c("MCAR", "MCAR", "MAR"),
+   miss_rates = c(0.2,0.5,0.4), miss_aux = c("X1","X2","X1"), seed = 161
 )
 
-mar_all_missing_X3_50 <- mc$mc_study(
+mar_all_missing_X3_50 <-  mc$mc_study(
   methods = c("cart","cart_boot", "pmm"), m = 30, 
   formula = "X3 ~ X1 +X2",
   c("(Intercept)"=5, "X1"=0.6, "X2"=0.5),
   c("X3" = 12.8), 
   n = 500, cycles =  mc_cycles,
   miss_vars =c("X1","X2","X3"), 
-  miss = "MAR", miss_rates = c(0.2,0.5,0.5), miss_aux = c("X1","X2","X3"), seed = 161
+  miss = c("MCAR", "MCAR", "MAR"),
+   miss_rates = c(0.2,0.5,0.5), miss_aux = c("X1","X2","X1"), seed = 161
 )
 
 
 ##### PLOTTING
 
 # put your data frames in a list
-mc_raw_mar_missingAll <- list(
-  rbind(mar_all_missing_X3_10[[1]],mar_all_missing_X3_10[[2]]),
-  rbind(mar_all_missing_X3_20[[1]],mar_all_missing_X3_20[[2]]),
-  rbind(mar_all_missing_X3_30[[1]],mar_all_missing_X3_30[[2]]),
-  rbind(mar_all_missing_X3_40[[1]],mar_all_missing_X3_40[[2]]),
-  rbind(mar_all_missing_X3_50[[1]],mar_all_missing_X3_50[[2]])
+mc_raw_mar_missingAll <- list(mar_all_missing_X3_10,
+  mar_all_missing_X3_20,mar_all_missing_X3_30,
+  mar_all_missing_X3_40,mar_all_missing_X3_50
 )
+
+#rm(mar_all_missing_X3_10,
+#  mar_all_missing_X3_20,mar_all_missing_X3_30,
+#  mar_all_missing_X3_40,mar_all_missing_X3_50
+#)
 
 # process each df and return a list of summarised tibbles
 mar_all_missing_raw <- lapply(seq_along(mc_raw_mar_missingAll), function(k) {
@@ -541,8 +542,10 @@ plots_mar_all_missing[[4]] <- plots_mar_all_missing[[4]] +
   theme(legend.position = "bottom")
 
 
+
 save(mc_raw_mcar_missingX3, 
   mc_raw_mcar_missingAll, 
   mc_raw_mar_missingX3, 
   mc_raw_mar_missingAll,
-  file = "project/dev/tom/mc_raw_results.RData")
+  file = "project/raw_mc_results/mc_raw_results_s=200.RData")
+
