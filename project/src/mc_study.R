@@ -7,9 +7,32 @@ sys.source("project/src/mc_helpers.R", envir = helpers)
 mc_study <- function(
   methods, m, formula, true_vals,
   n, cycles, 
-  miss_vars, miss, miss_rates, miss_aux, 
-  seed
+  miss_vars, miss, miss_rates, miss_aux = NULL, 
+  seed = NULL
 ){
+  #' Compare different mice methods.
+  #' 
+  #' @description This function compares different mice methods using a
+  #' mc study. It generates data and missisng values on its own.
+  #' 
+  #' @param methods character. Method(s) to compare.
+  #' @param m integer. Number of imputation every mice call.
+  #' @param formula character(1). LM formula for imputed and pooled data.
+  #' @param true_vals named numeric. Vector with true parameters of linear relationship.
+  #' @param n integer(1). Size of dataset.
+  #' @param cycles integer(1). Number of mc cycles.
+  #' @param miss_vars character. Name(s) of column(s) to generate missings for.
+  #' @param miss character. Vector or string with same dimensions as miss_vars. 
+  #'                        Missing method that should be applied for every var.
+  #' @param miss_rates numeric. Vector of numerics or single numeric between 0 and 1 with
+  #'                            same dimensions as miss_vars. Proportion of variable that
+  #'                            should be missing. 
+  #' @param miss_aux character. Only needed if one or more "miss" are set to "MAR". Vector
+  #'                            or string with same dimensions as miss_vars. Name of column
+  #'                            that influences missings for the corresponing column.
+  #' @param seed numeric(1). Optional seed for reproducable rng.
+  #' @return Summary for every cycle in one dataframe.
+  
   # Check args.
 
   # Initalize variables.
@@ -58,7 +81,8 @@ mc_study <- function(
         ci_l   = ci_low,
         ci_u   = ci_high,
         bias   = bias,
-        cover  = cover
+        cover  = cover,
+        row.names = NULL
       )
       k <- k + 1L
       # Increase progress bar.
@@ -76,7 +100,7 @@ mc_study <- function(
 }
 
 t <- mc_study(
-  c("cart", NULL), 30, "X3 ~ X1 +X2",
+  c("cart", "pmm"), 30, "X3 ~ X1 +X2",
   c("(Intercept)"=5, "X1"=8, "X2"=6, "X3"=12.8), 
   500, 10, c("X1", "X2", "X3"), 
   "MCAR", c(0.2, 0.5, 0.3), NULL, NULL
