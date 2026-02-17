@@ -50,7 +50,6 @@ mc_study <- function(
   results <- list()
   means_results <- list()
   k <- 1L
-  km <- 1L
   # Initiate progress bar.
   print("Starting MC Study please wait...")
   pb <- txtProgressBar(min = 0, max = cycles * length(methods), style = 3)
@@ -80,17 +79,16 @@ mc_study <- function(
         imp = imp, 
         method = method, cycle = cy, true_means = true_means
       )
-      means_results[[km]] <- means_df
-      km <- km + 1
+      results[[k]] <- means_df
 
       lm_df <- fit_lm(
         imp = imp, formula = formula,
         method = method, cycle = cy, 
         true_vals = true_vals
       )
-      results[[k]] <- lm_df
+      results[[k + 1]] <- lm_df
       
-      k <- k + 1L
+      k <- k + 2
       # Increase progress bar.
       setTxtProgressBar(pb, k)
     }
@@ -101,12 +99,8 @@ mc_study <- function(
 
   # Create df.
   results_df <- do.call(rbind, results)
-  means_df   <- do.call(rbind, means_results)
 
-  list(
-    estimates = results_df,
-    means = means_df
-  )
+  results_df
 }
 
 fit_lm <- function(
@@ -127,11 +121,14 @@ fit_lm <- function(
   bias  <- s$estimate - true
   cover <- (ci_low <= true) & (ci_high >= true)
 
+  # Change term names.
+  terms <- helpers$rename_coef_levels(s$term)
+
   # Fill results.
   lm_df <- data.frame(
     cycle   = cycle,
     method = method,
-    term   = s$term,
+    term   = terms,
     est    = s$estimate,
     se     = s$std.error,
     ci_l   = ci_low,
@@ -173,7 +170,7 @@ fit_means <- function(
       true_vals = true_vals
     )
 
-    fit$term <- v
+    fit$term <- glue::glue("mu({v})")
 
     means_df <- rbind(
       means_df,

@@ -138,3 +138,27 @@ generate_data <- function(n, seed = NA) {
 
   as.data.frame(cbind(X1, X2, X3))
 }
+
+rename_coef_levels <- function(x) {
+  # Rename coef names by rules:
+  # - "(Intercept)" -> "b0"
+  # - "x<d>" / "X<d>" -> "b<d>"
+  # - "<letters><d>" (excluding x/X) -> "b(d-1)"
+  # - Otherwise -> "beta(<original>)"
+
+  z <- as.character(x)
+
+  is_int <- stringr::str_detect(z, stringr::regex("^\\(intercept\\)$", ignore_case = TRUE))
+  is_xd  <- stringr::str_detect(z, stringr::regex("^[x]\\d+$", ignore_case = TRUE))
+  is_ad  <- stringr::str_detect(z, "^[A-Za-z]+\\d+$") & !is_xd
+
+  out <- z
+  out[is_int] <- "b0"
+  out[is_xd]  <- glue::glue("b{as.integer(stringr::str_extract(z[is_xd], '\\\\d+'))}") |> as.character()
+  out[is_ad]  <- glue::glue("b{as.integer(stringr::str_extract(z[is_ad], '\\\\d+')) - 1L}") |> as.character()
+
+  idx <- !(is_int | is_xd | is_ad)
+  out[idx] <- glue::glue("beta({z[idx]})") |> as.character()
+
+  if (is.factor(x)) { levels(x) <- out; x } else out
+}

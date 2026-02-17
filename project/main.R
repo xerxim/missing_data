@@ -15,9 +15,9 @@ plot_path <- "project/plots/" # Use file.path(plot_path, "plotname") to safe.
 
 # Test run.
 t <- mc$mc_study(
-  methods = c("cart", "cart_boot", "pmm"), m=  30, formula = "X3 ~ X1 + X2",
+  methods = c("cart", "cart_boot", "pmm"), m = 30, formula = "X3 ~ X1 + X2",
   true_vals = c("(Intercept)"=5, "X1"=0.6, "X2"=0.5), 
-  n = 500, cycles = 300, miss_vars = "X3", true_means = c("X3" = 12.8),
-  miss = "MCAR", miss_rates =  0.3, miss_aux = NULL, seed = 161
+  n = 500, cycles = 3, miss_vars = "X3", true_means = c("X3" = 12.8),
+  miss = "MCAR", miss_rates =  0.3, miss_aux = NULL, seed = NA
 )
-t$means
+t
