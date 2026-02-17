@@ -90,7 +90,7 @@ make_missing <- function(
   if(!is.na(seed)) set.seed(seed)
   # Set constants.
   logit <- function(x) 1/(1+exp(-x))
-  
+  data_org <- data
   # Iterate over vars.
   for(i in seq_along(vars)) {
     # Set iteration vars.
@@ -110,7 +110,7 @@ make_missing <- function(
     if(method == "mar"){
       if(is.null(aux)) stop("Aux needs to be defined for MAR!")
       a <- aux[[i]]
-      x <- scale(data[[a]])
+      x <- scale(data_org[[a]])
       p <- logit(alpha + 1 * x)
     }
 
