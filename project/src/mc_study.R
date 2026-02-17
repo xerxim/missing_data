@@ -51,8 +51,12 @@ mc_study <- function(
   means_results <- list()
   k <- 1L
   # Initiate progress bar.
-  print("Starting MC Study please wait...")
-  pb <- txtProgressBar(min = 0, max = cycles * length(methods), style = 3)
+  print("Running MC Study...")
+  cli::cli_progress_bar(
+    name = "MC",
+    total = cycles * length(methods),
+    format = "{cli::pb_bar} {cli::pb_percent} | ETA: {cli::pb_eta} | {cli::pb_rate}"
+  )
   # Iterate over cycles.
   for(cy in (1:cycles)){
     # Generate Data.
@@ -90,11 +94,11 @@ mc_study <- function(
       
       k <- k + 2
       # Increase progress bar.
-      setTxtProgressBar(pb, k)
+      cli::cli_progress_update()
     }
   }
   # Close bar.
-  close(pb)
+  cli::cli_progress_done()
   print("Finished MC Study!")
 
   # Create df.
