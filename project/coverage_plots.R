@@ -7,6 +7,10 @@ sys.source("project/src/mc_study.R", envir = mc)
 sys.source("project/src/mc_helpers.R", envir = mc)
 source("project/src/mice.impute.cart_boot.R")
 
+#data loading
+load("project/dta/main_data.RData")
+
+#festes arg
 row_labels <- c("MCAR",
 "MCAR\nX1: 10% missing,\nX2: 50% missing",
 "MAR",
@@ -21,10 +25,13 @@ plot_names <- c(
   expression(mu[3])
 )
 
+i1a <- full_output$`1a`
+i1b <- full_output$`1b`
+i1c <- full_output$`1c`
+i1d <- full_output$`1d`
 
-load(...)
 
-mc$make_coverages_plot(c(...), plot_names)
+mc$make_coverages_plot(c("i1c","i1d","i1a","i1b"), plot_names)
 
 ##### ii) INTERACTION DATA
 
