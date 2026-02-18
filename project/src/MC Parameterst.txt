@@ -1,0 +1,51 @@
+Parameter für die verschiedenen MC Studies:
+
+immer Datensatz mit drei Variaben (X1, X2, X3)
+
+n = 500
+cycles = ?
+m = 30
+
+i) Auf Basis von linearen Daten: X3 ~ X1 + X2
+
+    a) MAR: nur missings in X3
+        1) missings in X3: 10%
+        ...
+        5) missings in X3: 50%
+
+    b) MAR: missings in allen drei Variablen (X1: 20% missing, X2: 50%)
+        1) missings in X3: 10%
+        ...
+        5) missings in X3: 50%
+
+    c) MCAR: nur missings in X3
+        1) missings in X3: 10%
+        ...
+        5) missings in X3: 50%
+
+    d) MCAR: missings in allen drei Variablen (X1: 20% missing, X2: 50%)
+        1) missings in X3: 10%
+        ...
+        5) missings in X3: 50%
+
+ii) Auf Basis von Daten mit Interaktionseffekt: X3 ~ X1 + X2
+
+    a) MAR: nur missings in X3
+        1) missings in X3: 10%
+        ...
+        5) missings in X3: 50%
+
+    b) MAR: missings in allen drei Variablen (X1: 20% missing, X2: 50%)
+        1) missings in X3: 10%
+        ...
+        5) missings in X3: 50%
+
+    c) MCAR: nur missings in X3
+        1) missings in X3: 10%
+        ...
+        5) missings in X3: 50%
+
+    d) MCAR: missings in allen drei Variablen (X1: 20% missing, X2: 50%)
+        1) missings in X3: 10%
+        ...
+        5) missings in X3: 50%
