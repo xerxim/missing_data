@@ -231,7 +231,7 @@ names(output_2b) <- purrr::map(miss_rates, \(rate)glue::glue("miss_rate={rate}")
 # Save output.
 save(output_2b, file = glue::glue("{dta_single_path}/2b_data.RData"))
 # Fill output in full list.
-full_output[[6]] <- output_2a
+full_output[[6]] <- output_2b
 
 #--------------------------------------------------------
 ## c) MCAR: Missings only in X3, varying missing %.
@@ -262,7 +262,7 @@ names(output_2c) <- purrr::map(miss_rates, \(rate)glue::glue("miss_rate={rate}")
 # Save output.
 save(output_2c, file = glue::glue("{dta_single_path}/2c_data.RData"))
 # Fill output in full list.
-full_output[[7]] <- output_2a
+full_output[[7]] <- output_2c
 
 #--------------------------------------------------------
 ## d) MCAR: Missings in all vars, varying missing %.
@@ -293,7 +293,7 @@ names(output_2d) <- purrr::map(miss_rates, \(rate)glue::glue("miss_rate={rate}")
 # Save output.
 save(output_2d, file = glue::glue("{dta_single_path}/2d_data.RData"))
 # Fill output in full list.
-full_output[[8]] <- output_1a
+full_output[[8]] <- output_2d
 
 # Name full list.
 n <- c(
