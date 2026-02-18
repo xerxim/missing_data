@@ -18,7 +18,7 @@ progressr::handlers(progressr::handler_cli(
   format = "{cli::pb_bar} {cli::pb_percent} | ETA {cli::pb_eta}"
 ))
 
-cycles <- 300
+cycles <- 500
 
 dfs_mcar_X3_miss_nonlin <- list()
 i <- 1
@@ -67,7 +67,8 @@ mcar_x3_missing_combined <- bind_rows(mcar_x3_missing_raw, .id = "source_id")
 #List with all data split by Parameter
 mcar_x3_missing_parameter_info <- mcar_x3_missing_combined %>% group_split(term, .keep = TRUE)
 
-plot_names <- c("Beta 0", "Beta 1", "Beta 2","Beta 3", "Mu 3")
+plot_names <- c(expression(beta[0]), expression(beta[1]), 
+  expression(beta[2]), expression(beta[3]), expression(mu[3]))
 
 #List with coverage plots for each parameter
 plots_mcar_x3_missing <- vector("list", length(mcar_x3_missing_parameter_info))
