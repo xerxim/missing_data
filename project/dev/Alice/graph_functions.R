@@ -1,13 +1,12 @@
 
-
 library("patchwork")
 
 ### Bias Boxplot Funktion
 # Nimmt einen dataframe entgegen, wie er von mc_study() produziert wird
-bias_boxplot <- function(df, xticks = c("β0", "β1", "β2", "μ(X3)"), title = ""){
+bias_boxplot <- function(df, xticks = c("β0", "β1", "β2", "μ(X3)"), title = "Relativer Bias"){
   
   boxplot <- df%>% 
-    ggplot(., aes(x = term, y = bias, fill = method))+
+    ggplot(., aes(x = term, y = rel_bias, fill = method))+
     geom_boxplot()+
     geom_hline(yintercept =  0, lty = 2) +
     theme(
@@ -20,8 +19,6 @@ bias_boxplot <- function(df, xticks = c("β0", "β1", "β2", "μ(X3)"), title = 
   boxplot
   
 }
-
-
 
 
 ### coverage plot function
