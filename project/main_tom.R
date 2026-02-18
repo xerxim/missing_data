@@ -190,14 +190,17 @@ mcar_all_missing_X3_50 <- mc$mc_study(
 mc_raw_mcar_missingAll <- list(mcar_all_missing_X3_10,
   mcar_all_missing_X3_20,
   mcar_all_missing_X3_30,
-  mcar_all_missing_X3_40
+  mcar_all_missing_X3_40,
+  mcar_all_missing_X3_50
 )
 
-rm(mcar_all_missing_X3_10,
-  mcar_all_missing_X3_20,
-  mcar_all_missing_X3_30,
-  mcar_all_missing_X3_40,
-  mcar_all_missing_X3_50)
+
+#rm(mcar_all_missing_X3_10,
+#  mcar_all_missing_X3_20,
+#  mcar_all_missing_X3_30,
+#  mcar_all_missing_X3_40,
+#  mcar_all_missing_X3_50)
+
 # process each df and return a list of summarised tibbles
 mcar_all_missing_raw <- lapply(seq_along(mc_raw_mcar_missingAll), function(k) {
   mc_raw_mcar_missingAll[[k]] %>%
