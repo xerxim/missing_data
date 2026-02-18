@@ -5,6 +5,7 @@ pacman::p_load(patchwork, tidyverse, mice,cowplot,gridExtra)
 ## Eigener Code:
 mc <- new.env()
 sys.source("project/src/mc_study.R", envir = mc)
+sys.source("project/src/mc_helpers.R", envir = mc)
 source("project/src/mice.impute.cart_boot.R")
 
 # Working constants:
