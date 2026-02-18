@@ -3,7 +3,7 @@ library("patchwork")
 
 ### Bias Boxplot Funktion
 # Nimmt einen dataframe entgegen, wie er von mc_study() produziert wird
-bias_boxplot <- function(df, title = "", xticks,){
+bias_boxplot <- function(df, title = "", xticks){
   
   boxplot <- df%>% 
     ggplot(., aes(x = term, y = rel_bias, fill = method))+
