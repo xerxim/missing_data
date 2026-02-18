@@ -119,7 +119,12 @@ mc_study_furrr <- function(
     seed = TRUE, # Seeding.
     globals = c("mice.impute.cart_boot") # Give our boot function.
   )
+  # Save names.
+  names_vals <- names(true_vals)
+  names_means <- names(true_means)
   # Ensure local copies of variables for workers.
+  names_vals     <- freeze(names_vals, as.character)
+  names_means    <- freeze(names_means, as.character)
   methods        <- freeze(methods, as.character)
   m              <- freeze(m, as.numeric)
   formula        <- freeze(formula, as.character)
@@ -133,6 +138,10 @@ mc_study_furrr <- function(
   miss_rates     <- freeze(miss_rates, as.numeric)
   miss_aux       <- freeze(miss_aux, as.character)
   seed           <- freeze(seed, as.numeric)
+  # Set names again.
+  names(true_vals) <- names_vals 
+  names(true_means) <- names_means
+
   # Use progress bar.
   results_list <- progressr::with_progress({
     p <- progressr::progressor(steps = cycles)
