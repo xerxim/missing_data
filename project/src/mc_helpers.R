@@ -213,11 +213,12 @@ rename_coef_levels <- function(x) {
   if (is.factor(x)) { levels(x) <- out; x } else out
 }
 
-# Function that feed on a vector with list names (each list should contain dfs that are an MC result) and displays coverage plots
+# Function that feed on a vector with list names (each list should contain dfs that are an MC result) 
+# and displays coverage plots - Tom
 
 make_coverages_plot <- function(list_names,
-                                  miss_perc,
                                   plot_names,
+                                  miss_perc = c(10, 20, 30, 40, 50),
                                   row_labels = c("a","b","c","d"),
                                   xlab = expression("Missing % in " * X[3])) {
   
