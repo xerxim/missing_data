@@ -119,6 +119,20 @@ mc_study_furrr <- function(
     seed = TRUE, # Seeding.
     globals = c("mice.impute.cart_boot") # Give our boot function.
   )
+  # Ensure local copies of variables for workers.
+  methods        <- freeze(methods, as.character)
+  m              <- freeze(m, as.numeric)
+  formula        <- freeze(formula, as.character)
+  true_vals      <- freeze(true_vals, as.numeric)
+  true_means     <- freeze(true_means, as.numeric)
+  n              <- freeze(n, as.numeric)
+  cycles         <- freeze(cycles, as.numeric)
+  data_generator <- if (is.null(data_generator)) NULL else as.function(data_generator)
+  miss_vars      <- freeze(miss_vars, as.character)
+  miss           <- freeze(miss, as.character)
+  miss_rates     <- freeze(miss_rates, as.numeric)
+  miss_aux       <- freeze(miss_aux, as.character)
+  seed           <- freeze(seed, as.numeric)
   # Use progress bar.
   results_list <- progressr::with_progress({
     p <- progressr::progressor(steps = cycles)
@@ -290,4 +304,9 @@ fit_means_old <- function(
   }
 
   means_df
+}
+
+freeze <- function(x, f) {
+  if (is.null(x)) return(NULL)
+  unname(f(x))
 }
