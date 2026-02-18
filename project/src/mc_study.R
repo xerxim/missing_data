@@ -107,6 +107,75 @@ mc_study <- function(
   results_df
 }
 
+mc_study_furrr <- function(
+  methods, m, formula, true_vals, true_means,
+  n, cycles, data_generator = helpers$generate_data,
+  miss_vars, miss, miss_rates, miss_aux = NULL, 
+  seed = NA
+){
+  print("Starting MC Study...")
+  # Furr options.
+  opts <- furrr::furrr_options(
+    seed = TRUE, # Seeding.
+    globals = c("mice.impute.cart_boot") # Give our boot function.
+  )
+  # Use progress bar.
+  results_list <- progressr::with_progress({
+    p <- progressr::progressor(steps = cycles)
+
+    # Define one cycle.
+    one_cycle <- function(cy) {
+      # Increase seed.
+      cy_seed <- if (!is.na(seed)) seed + cy else NA
+      # Generate data.
+      data <- data_generator(n = n, seed = cy_seed)
+      # Create NAs.
+      data_w_na <- helpers$make_missing(
+        data, vars = miss_vars,
+        methods = miss, rates = miss_rates,
+        aux = miss_aux, seed = cy_seed
+      )
+      # Create output for every method.
+      out <- lapply(methods, function(method){
+        # Impute with mice using method.
+        imp <- mice::mice(
+          data_w_na, m = m, method = method,
+          printFlag = FALSE, seed = cy_seed
+        )
+        # Fit means and extract relevant values.
+        means_df <- fit_means(
+          imp = imp,
+          method = method, cycle = cy, true_means = true_means
+        )
+        # Fit formula and extract relevant values.
+        lm_df <- fit_lm(
+          imp = imp, formula = formula,
+          method = method, cycle = cy,
+          true_vals = true_vals
+        )
+
+        list(means_df, lm_df)
+      })
+      # Increse bar.
+      p(sprintf("cycle %d", cy))
+      # Flatten 2d list to 1d and return.
+      unlist(out, recursive = FALSE)
+    }
+    # Map over cycles, multithreaded.
+    results_list <- furrr::future_map(1:cycles, one_cycle, .options = opts)
+  })
+
+  # Flatten 2d list to 1d.
+  results <- unlist(results_list, recursive = FALSE)
+  # Combine to Dataframe.
+  results_df <- do.call(rbind, results)
+
+  # Return.
+  print("Finished MC Study!")
+  results_df
+}
+
+
 fit_lm <- function(
   imp, formula, method, cycle, true_vals
 ){
