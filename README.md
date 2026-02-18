@@ -1,8 +1,8 @@
 # Von Mäusen und Bäumen
 
-Dieses Repository stellt die Grundlage unserer Prüfungsleistung im Kurs "Statistische Analyse unvollständiger Daten" im WiSe 2025/26 dar. 
+Dieses Repository stellt die Grundlage unserer Prüfungsleistung mit dem Titel **"Of mice and trees: towards proper MI using CART"** im Kurs "Statistische Analyse unvollständiger Daten" im WiSe 2025/26 dar. 
 
-Wir, das sind Simon Fehrenbach, Tom Goldschmidt und Alice Kar, sind angetreten, die Implementation des CART Algorithmus innerhalb der mice MI Pipeline um ein bootstrap resampling zu erweitern. Das Ziel war es, auf diese Weise, den P-Step zu approximieren, da dieser in mice.impute.cart ignoriert wird.
+Wir, das sind Simon Fehrenbach, Tom Goldschmidt und Alice Kar, sind angetreten, die Implementation des CART Algorithmus innerhalb der mice Pipeline um ein bootstrap resampling zu erweitern. Auf diese Weise wollen wir den P-Step approximieren, was in mice.impute.cart nicht geschieht wodurch sich bisher eine between-imputation-variance von 0 ergibt.
 
-# Die Nutzung von KI
+## Die Nutzung von KI
 
