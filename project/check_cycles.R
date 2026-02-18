@@ -18,10 +18,8 @@ progressr::handlers(progressr::handler_cli(
 
 # Generate only once, then load from dta.
 generate_data <- FALSE
+cycles <- c(10, 50, 100, 200, 300, 500, 1000)
 if(generate_data) {
-  cycles <- c(
-    10, 50, 100, 200, 300, 500, 1000
-  )
   out <- vector("list", length(cycles))
   for(i in 1:length(cycles)) {
     cy <- cycles[[i]]
