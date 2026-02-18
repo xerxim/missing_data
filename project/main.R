@@ -54,6 +54,7 @@ miss_rates <- list(
   c(0.5)  # 50% in X3.
 )
 # Generate data.
+print("----------------------------------------------------------")
 print("Running 1a:")
 output_1a <- purrr::map(miss_rates, function(miss_rate){
   mc$mc_study_furrr(
@@ -85,6 +86,7 @@ miss_rates <- list(
   c(0.2, 0.5, 0.5)  # 50% in X3.
 )
 # Generate data.
+print("----------------------------------------------------------")
 print("Running 1b:")
 output_1b <- purrr::map(miss_rates, function(miss_rate){
   mc$mc_study_furrr(
@@ -116,6 +118,7 @@ miss_rates <- list(
   c(0.5)  # 50% in X3.
 )
 # Generate data.
+print("----------------------------------------------------------")
 print("Running 1c:")
 output_1c <- purrr::map(miss_rates, function(miss_rate){
   mc$mc_study_furrr(
@@ -147,6 +150,7 @@ miss_rates <- list(
   c(0.2, 0.5, 0.5)  # 50% in X3.
 )
 # Generate data.
+print("----------------------------------------------------------")
 print("Running 1d:")
 output_1d <- purrr::map(miss_rates, function(miss_rate){
   mc$mc_study_furrr(
@@ -168,8 +172,8 @@ full_output[[4]] <- output_1d
 # Constant parameters.
 data_generator <- helpers$generate_data_nonlinear_moderate
 formula <- "X3 ~ X1 + X2 + X1*X2"
-true_vals <- c("(Intercept)"=5, "X1"=0.6, "X2"=0.5, "X1:X2"=0.45)
-true_means <- c("X3" = 2.975)
+true_vals <- c("(Intercept)"=5, "X1"=0.6, "X2"=0.5, "X1:X2"=0.25)
+true_means <- c("X3" = 3.875)
 
 #--------------------------------------------------------
 ## a) MAR: Missings only in X3, varying missing %.
@@ -186,6 +190,7 @@ miss_rates <- list(
   c(0.5)  # 50% in X3.
 )
 # Generate data.
+print("----------------------------------------------------------")
 print("Running 2a:")
 output_2a <- purrr::map(miss_rates, function(miss_rate){
   mc$mc_study_furrr(
@@ -217,6 +222,7 @@ miss_rates <- list(
   c(0.2, 0.5, 0.5)  # 50% in X3.
 )
 # Generate data.
+print("----------------------------------------------------------")
 print("Running 2b:")
 output_2b <- purrr::map(miss_rates, function(miss_rate){
   mc$mc_study_furrr(
@@ -248,6 +254,7 @@ miss_rates <- list(
   c(0.5)  # 50% in X3.
 )
 # Generate data.
+print("----------------------------------------------------------")
 print("Running 2c:")
 output_2c <- purrr::map(miss_rates, function(miss_rate){
   mc$mc_study_furrr(
@@ -279,6 +286,7 @@ miss_rates <- list(
   c(0.2, 0.5, 0.5)  # 50% in X3.
 )
 # Generate data.
+print("----------------------------------------------------------")
 print("Running 2d:")
 output_2d <- purrr::map(miss_rates, function(miss_rate){
   mc$mc_study_furrr(
