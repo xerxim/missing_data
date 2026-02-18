@@ -12,7 +12,7 @@ for (mis_rate in c(0.1, 0.2, 0.3, 0.4, 0.5)) {
     true_vals = c("(Intercept)"=5, "X1"=0.6, "X2"=0.5, "X1:X2"=0.1), 
     data_generator = generate_data_nonlinear_weak,
     n = 500, cycles = mc_cycles, miss_vars = "X3", true_means = c("X3" = 4.55),
-    miss = "MCAR", miss_rates =  0.3, miss_aux = NULL, seed = NA
+    miss = "MCAR", miss_rates =  mis_rate, miss_aux = NULL, seed = NA
   )
   
   i <- i+1
@@ -29,7 +29,7 @@ nonlinear_weak_interaction <- mc$mc_study(
   true_vals = c("(Intercept)"=5, "X1"=0.6, "X2"=0.5, "X1:X2"=0.1), 
   data_generator = generate_data_nonlinear_weak,
   n = 500, cycles = 100, miss_vars = "X3", true_means = c("X3" = 4.55),
-  miss = "MCAR", miss_rates =  0.3, miss_aux = NULL, seed = NA
+  miss = "MCAR", miss_rates =  mis_rate, miss_aux = NULL, seed = NA
 )
 
 nonlinear_moderate_interaction <- mc$mc_study(
@@ -37,7 +37,7 @@ nonlinear_moderate_interaction <- mc$mc_study(
   true_vals = c("(Intercept)"=5, "X1"=0.6, "X2"=0.5, "X1:X2"=0.25), 
   data_generator = generate_data_nonlinear_moderate,
   n = 500, cycles = 100, miss_vars = "X3", true_means = c("X3" = 3.875),
-  miss = "MCAR", miss_rates =  0.3, miss_aux = NULL, seed = NA
+  miss = "MCAR", miss_rates =  mis_rate, miss_aux = NULL, seed = NA
 )
 
 nonlinear_strong_interaction <- mc$mc_study(
@@ -45,7 +45,7 @@ nonlinear_strong_interaction <- mc$mc_study(
   true_vals = c("(Intercept)"=5, "X1"=0.6, "X2"=0.5, "X1:X2"=0.45), 
   data_generator = generate_data_nonlinear_strong,
   n = 500, cycles = 100, miss_vars = "X3", true_means = c("X3" = 2.975),
-  miss = "MCAR", miss_rates =  0.3, miss_aux = NULL, seed = NA
+  miss = "MCAR", miss_rates =  mis_rate, miss_aux = NULL, seed = NA
 )
 
 
