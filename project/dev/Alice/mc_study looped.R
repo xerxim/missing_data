@@ -97,7 +97,7 @@ for (mis_rate in c(0.1, 0.2, 0.3, 0.4, 0.5)) {
     n = 500, cycles =  mc_cycles, 
     miss_vars =c("X1","X2","X3"), 
     miss = "MAR", miss_rates = c(0.2,0.5,miss_rate), 
-    miss_aux = c("X1","X2","X1"), # jetzt ist X1 doch MNAR?
+    miss_aux = c("X1","X2","X1"), 
     seed = 161
   )
   

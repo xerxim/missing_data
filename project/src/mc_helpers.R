@@ -139,6 +139,56 @@ generate_data <- function(n, seed = NA) {
   as.data.frame(cbind(X1, X2, X3))
 }
 
+### Data Generator nicht-lineare Daten
+
+generate_data_nonlinear_weak <- function(n, seed = NA) {
+  
+  if(!is.na(seed)) set.seed(seed)
+  
+  X1 <- rnorm(n, 8, 3)
+  X2 <- 10 - 0.5 * X1 + rnorm(n, 0, 3)
+  # Variablen centern, damit der Interaktionseffekt kontrollierbarer ist
+  X1 <- X1 - mean(X1)
+  X2 <- X2 - mean(X2)
+  
+  X3 <- 5 + 0.6 * X1 + 0.5 * X2 + 0.1 * X1*X2 + rnorm(n, 0, sqrt(2))
+  
+  as.data.frame(cbind(X1, X2, X3))
+}
+
+generate_data_nonlinear_moderate <- function(n, seed = NA) {
+  
+  if(!is.na(seed)) set.seed(seed)
+  
+  X1 <- rnorm(n, 8, 3)
+  X2 <- 10 - 0.5 * X1 + rnorm(n, 0, 3)
+  # Variablen centern, damit der Interaktionseffekt kontrollierbarer ist
+  X1 <- X1 - mean(X1)
+  X2 <- X2 - mean(X2)
+  
+  X3 <- 5 + 0.6 * X1 + 0.5 * X2 + 0.25 * X1*X2 + rnorm(n, 0, sqrt(2))
+  
+  as.data.frame(cbind(X1, X2, X3))
+}
+
+
+generate_data_nonlinear_strong <- function(n, seed = NA) {
+  
+  if(!is.na(seed)) set.seed(seed)
+  
+  X1 <- rnorm(n, 8, 3)
+  X2 <- 10 - 0.5 * X1 + rnorm(n, 0, 3)
+  # Variablen centern, damit der Interaktionseffekt kontrollierbarer ist
+  X1 <- X1 - mean(X1)
+  X2 <- X2 - mean(X2)
+  
+  X3 <- 5 + 0.6 * X1 + 0.5 * X2 + 0.45 * X1*X2 + rnorm(n, 0, sqrt(2))
+  
+  as.data.frame(cbind(X1, X2, X3))
+}
+
+
+
 rename_coef_levels <- function(x) {
   # Rename coef names by rules:
   # - "(Intercept)" -> "b0"
