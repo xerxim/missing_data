@@ -192,6 +192,7 @@ fit_lm <- function(
   # (total) Bias and coverage.
   true <- true_vals[s$term]
   bias  <- s$estimate - true
+  rel_bias = bias / true
   cover <- (ci_low <= true) & (ci_high >= true)
 
   # Change term names.
@@ -199,15 +200,16 @@ fit_lm <- function(
 
   # Fill results.
   lm_df <- data.frame(
-    cycle   = cycle,
-    method = method,
-    term   = terms,
-    est    = s$estimate,
-    se     = s$std.error,
-    ci_l   = ci_low,
-    ci_u   = ci_high,
-    bias   = bias,
-    cover  = cover,
+    cycle     = cycle,
+    method    = method,
+    term      = terms,
+    est       = s$estimate,
+    se        = s$std.error,
+    ci_l      = ci_low,
+    ci_u      = ci_high,
+    bias      = bias,
+    rel_bias  = rel_bias,
+    cover     = cover,
     row.names = NULL
   )
 
@@ -219,14 +221,15 @@ fit_means <- function(
 ){
   # Create sub df.
   means_df <- data.frame(
-    cycle = integer(0),
-    method = character(0),
-    est    = numeric(0),
-    se     = numeric(0),
-    ci_l   = numeric(0),
-    ci_u   = numeric(0),
-    bias   = numeric(0),
-    cover  = logical(0),
+    cycle    = integer(0),
+    method   = character(0),
+    est      = numeric(0),
+    se       = numeric(0),
+    ci_l     = numeric(0),
+    ci_u     = numeric(0),
+    bias     = numeric(0),
+    rel_bias = numeric(0),
+    cover    = logical(0),
     row.names = NULL
   )
   # For every imputed variable.
