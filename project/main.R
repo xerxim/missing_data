@@ -18,10 +18,13 @@ progressr::handlers(progressr::handler_cli(
   format = "{cli::pb_bar} {cli::pb_percent} | ETA {cli::pb_eta}"
 ))
 
+# Start timing.
+start <- Sys.time()
+
 # Analysis:
 # Constant parameters.
 N <- 500
-CYCLES <- 3
+CYCLES <- 500
 M <- 30
 METHODS <- c("cart", "pmm", "cart_boot")
 SEED <- 161
@@ -301,7 +304,11 @@ names(full_output) <- n
 # Save.
 save(full_output, file = glue::glue("{dta_path}/main_data.RData"))
 
-
+# Stop timing.
+end <- Sys.time()
+timed <- end - start
+print("Finished all Analysis!")
+print(glue::glue("Duration: {timed}"))
 
 
 
