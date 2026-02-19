@@ -256,6 +256,7 @@ make_coverages_plot <- function(list_names,
       plots[[i]] <- ggplot(param_list[[i]]) +
         geom_line(aes(missperc, coverage, color = method), alpha = 0.4) +
         geom_point(aes(missperc, coverage, color = method)) +
+      #  paletteer::scale_colour_paletteer_d("wesanderson::AsteroidCity1")+
         geom_hline(yintercept = 0.9, linetype = 2) +
         coord_cartesian(ylim = c(0, 1)) +
         labs(title = NULL, x = xlab, y = NULL, color = "Imputation Method") +
@@ -312,3 +313,29 @@ make_coverages_plot <- function(list_names,
     
       return(combined_plot)
 }
+
+bias_boxplot <- function(df, xticks = c("β0", "β1", "β2", "μ(X3)"), title = "Relativer Bias", ylim = NULL){
+  
+ 
+p <- df %>% 
+    ggplot(aes(x = term, y = rel_bias, fill = method)) +
+    geom_boxplot() +
+    geom_hline(yintercept = 0, lty = 2) +
+    theme(
+      axis.text = element_text(size = 12),
+      axis.title = element_text(size = 12)
+    ) +
+    labs(x = "", y = "Relative Bias") +
+    ggtitle(title) +
+    scale_x_discrete(labels = xticks) +
+    theme_classic()
+  
+  # Only apply limits if user supplies them
+  if (!is.null(ylim)) {
+    p <- p + coord_cartesian(ylim = ylim)
+  }
+  
+  return(p)
+}
+
+  
