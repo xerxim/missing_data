@@ -57,5 +57,5 @@ non_lin_cover
 
 #Export
 
-ggsave("project/plots/coverage_lin.pdf", lin_cover, width = 10, height = 6.66, limitsize = F)
-ggsave("project/plots/coverage_nonlin.pdf", non_lin_cover, width = 10, height = 6.66, limitsize = F)
+#ggsave("project/plots/coverage_lin.pdf", lin_cover, width = 10, height = 6.66, limitsize = F)
+#ggsave("project/plots/coverage_nonlin.pdf", non_lin_cover, width = 10, height = 6.66, limitsize = F)

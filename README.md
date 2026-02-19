@@ -7,6 +7,14 @@ Wir – Simon Fehrenbach ([simon_fehrenbach@stud.uni-bamberg.de](mailto:simon_fe
 Das Kernstück unserer Arbeit ist `mice.impute.cart_boot.R` (im src-Ordner). Dieses Skript enthält unsere mice-kompatible, gebootstrapte CART-Implementation.
 Der übrige Code im Repository dient der Evaluation des Ansatzes anhand mehrerer Monte-Carlo-Simulationen mit variierenden Parametern.
 
+## Setting der Simulationsstudie
+
+Wir haben unsere `cart_boot` Methode mit `cart` und `pmm` bei einem ansteigenden Anteil fehlender Werte in unserer Zielvariable $X_3$ unter unterschiedlichen missing data Mechanismen (MCAR / MAR) und zugrunde liegenden Datengenerierenden Prozessen (linear / mit Interaktionseffekt) evaluiert. Für jede Parameterkombination wurden $(S=) 500$ Datensätze auf der Basis des jeweiligen Datengenerierenden Prozesses mit $(n=) 500$ Beobachtungen generiert. Die Missings wurden entweder nur in $X_3$ (keine Chained Equation) oder in allen drei Variablen $X_1, X_2$ und  $X_3$ (mit Chained Equations) generiert. Bei MCAR erfolgte die Auswahl der Missings komplett zufällg, bei MAR war die Wahrscheinlichkeit das $X_3$ zum Missing wurde abhängig von $X_1$.
+
+Wir haben unsere `cart_boot` Methode gemeinsam mit `cart` und `pmm` bei einem steigenden Anteil fehlender Werte in der Zielvariable $X_3$ evaluiert. Die Untersuchung erfolgte unter verschiedenen Missing-Data-Mechanismen (MCAR / MAR) sowie unterschiedlichen datengenerierenden Prozessen (linear bzw. mit Interaktionseffekt).Für jede Parameterkombination wurden $S=500$ Datensätze mit jeweils $n=500$ Beobachtungen entsprechend des jeweiligen datengenerierenden Prozesses simuliert. Die fehlenden Werte wurden entweder ausschließlich in $X_3$ erzeugt (keine Chained Equations erforderlich) oder in allen drei Variablen $X_1$, $X_2$ und $X_3$ (Imputation mittels Chained Equations).
+
+Im MCAR-Szenario wurden die fehlenden Werte vollständig zufällig ausgewählt. Im MAR-Szenario hing die Wahrscheinlichkeit, dass $X_3$ fehlend ist, von $X_1$ ab.
+
 ## Projektstruktur
 
 ```
@@ -46,6 +54,3 @@ project-root/
 
 KI, explizit ChatGPT, war ein zentrales Werkzeug in unserem Arbeitsprozess. Es wurde für Nachfragen zu MI-Theorie, als Code-Advisor und als Lektor für Texte verwendet. Ideen, die wir auf diese Weise bekommen haben, haben wir mit belastbaren Quellen (zB den Seminarmaterialien oder der Literatur die wir in den Referenzen angegeben haben) abgeglichen. Wir sind davon überzeugt, dass wir die Technologie auf ethische Weise verwendet haben: Während sie uns einiges an Basis-Arbeit abgenommen hat, haben wir nie Arbeitsprozesse komplett abgegeben oder Code- bzw Textabschnitte einfach kopiert, sondern Feedback zu einzelnen Schritten eingeholt und kritisch eingearbeitet. Im Endeffekt ist unser Projekt wahrscheinlich umfassender geworden, als wenn wir es ohne die Hilfe von KI umgesetzt hätten, jedoch wurden keine Entscheidungen getroffen, die wir nicht begründen können.
 
-<!-- KI, explizit ChatGPT, war ein zentrales Werkzeug in unserem Arbeitsprozess und stellt in gewisser Weise das vierte Gruppenmitglied dar. Jede/r von uns hatte indivudelle Chatverläufe mit der Maschine, in denen sie Tutor für MI-Theorie, Code-Advisor und Lektor in einem war. Ideen, die wir auf diese Weise bekommen haben, haben wir mit belastbaren Quellen (zB den Seminarmaterialien oder der Literatur die wir in den Referenzen angegeben haben) abgeglichen. Wir sind davon überzeugt, dass wir die Technologie auf ethische Weise verwendet haben: Während sie uns einiges an Basis-Arbeit abgenommen hat, haben wir nie Arbeitsprozesse komplett abgegeben oder Code- bzw Textabschnitte einfach kopiert, sondern Feedback zu einzelnen Schritten eingeholt und kritisch eingearbeitet. Im Endeffekt ist unser Projekt wahrscheinlich umfassender geworden, als wenn wir es ohne die Hilfe von KI umgesetzt hätten, jedoch wurden keine Entscheidungen getroffen, die wir nicht begründen können. -->
-
-<!-- KI, explizit ChatGPT, wurde im Codingprozess als Troubleshooting/Debugging (e.g. Nachvollziehen von Fehlermeldungen, Korrektur nicht-funktionierender Codeschnipsel) und zur Erstellung von Testdatensätzen verwendet. Außerdem haben wir uns stellenweise geeignete Packages und Funktionen zur Lösung spezifischer Probleme vorschlagen lassen. -->
