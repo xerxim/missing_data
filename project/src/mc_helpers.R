@@ -321,13 +321,14 @@ p <- df %>%
     ggplot(aes(x = term, y = rel_bias, fill = method)) +
     geom_boxplot() +
     geom_hline(yintercept = 0, lty = 2) +
+    scale_x_discrete(labels = xticks) +
     theme(
       axis.text = element_text(size = 12),
-      axis.title = element_text(size = 12)
+      axis.title = element_text(size = 12),
+      axis.text.x = element_text(size = 20)
     ) +
     labs(x = "", y = "Relative Bias") +
     ggtitle(title) +
-    scale_x_discrete(labels = xticks) +
     theme_classic()
   
   # Only apply limits if user supplies them
