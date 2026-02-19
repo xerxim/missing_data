@@ -1,6 +1,6 @@
 # Imports:
 ## Libraries.
-pacman::p_load(patchwork, tidyverse, mice,cowplot,gridExtra)
+pacman::p_load(patchwork, tidyverse,cowplot,gridExtra)
 ## Eigener Code:
 mc <- new.env()
 sys.source("project/src/mc_study.R", envir = mc)
@@ -9,6 +9,7 @@ source("project/src/mice.impute.cart_boot.R")
 
 #data loading
 load("project/dta/main_data.RData")
+
 
 #festes arg
 row_labels <- c("MCAR",
@@ -31,18 +32,17 @@ i1c <- full_output$`1c`
 i1d <- full_output$`1d`
 
 
-mc$make_coverages_plot(c("i1c","i1d","i1a","i1b"), plot_names)
-
+mc$make_coverages_plot(c("i1c","i1d","i1a","i1b"), plot_names, row_labels = c("MCAR", "MCAR, CE", "MAR", "MAR, CE"))
 ##### ii) INTERACTION DATA
 
 #MC Simulation Result import
 load("project/raw_mc_results/mc_raw_results_s=300_interaction_effects.RData")
 
 #
-iia <- dfs_mar_X3_miss_nonlin
-iib <- dfs_mcar_all_miss_nonlin
-iic <- dfs_mar_X3_miss_nonlin
-iid <- dfs_mar_all_miss_nonlin
+iia <- full_output$`2a`
+iib <- full_output$`2b`
+iic <- full_output$`2c`
+iid <- full_output$`2d`
 
 ### Plotting
 
@@ -55,6 +55,6 @@ plot_names <- c(
 )
 
 
-mc$make_coverages_plot(c("iia", "iib", "iic", "iid"),
-  plot_names)
+mc$make_coverages_plot(c("iic", "iid","iia", "iib" ),
+  plot_names, row_labels = c("MCAR", "MCAR, CE", "MAR", "MAR, CE"))
 

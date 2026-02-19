@@ -256,6 +256,7 @@ make_coverages_plot <- function(list_names,
       plots[[i]] <- ggplot(param_list[[i]]) +
         geom_line(aes(missperc, coverage, color = method), alpha = 0.4) +
         geom_point(aes(missperc, coverage, color = method)) +
+      #  paletteer::scale_colour_paletteer_d("wesanderson::AsteroidCity1")+
         geom_hline(yintercept = 0.9, linetype = 2) +
         coord_cartesian(ylim = c(0, 1)) +
         labs(title = NULL, x = xlab, y = NULL, color = "Imputation Method") +
