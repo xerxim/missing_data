@@ -10,12 +10,7 @@ load("project/dta/main_data.RData")
 
 
 #festes arg
-row_labels <- c("MCAR",
-"MCAR\nX1: 10% missing,\nX2: 50% missing",
-"MAR",
-"MAR\nX1: 10% missing,\nX2: 50% missing"
-)
-
+row_labels <- c("MCAR", "MCAR\nwith Chained Equations", "MAR", "MAR\nwith Chained Equations")
 ##### i) Linear Data
 plot_names <- c(
   expression(beta[0]),
@@ -30,7 +25,9 @@ i1c <- full_output$`1c`
 i1d <- full_output$`1d`
 
 
-plots$make_coverages_plot(c("i1c","i1d","i1a","i1b"), plot_names, row_labels = c("MCAR", "MCAR, CE", "MAR", "MAR, CE"))
+lin_cover <- mc$make_coverages_plot(c("i1c","i1d","i1a","i1b"), plot_names, row_labels = row_labels)
+lin_cover
+
 ##### ii) INTERACTION DATA
 
 #MC Simulation Result import
@@ -53,6 +50,13 @@ plot_names <- c(
 )
 
 
-plots$make_coverages_plot(c("iic", "iid","iia", "iib" ),
-  plot_names, row_labels = c("MCAR", "MCAR, CE", "MAR", "MAR, CE"))
+non_lin_cover <- mc$make_coverages_plot(c("iic", "iid","iia", "iib" ),
+  plot_names, row_labels = row_labels)
 
+non_lin_cover
+
+
+#Export
+
+ggsave("project/plots/coverage_lin.pdf", lin_cover, width = 10, height = 6.66, limitsize = F)
+ggsave("project/plots/coverage_nonlin.pdf", non_lin_cover, width = 10, height = 6.66, limitsize = F)

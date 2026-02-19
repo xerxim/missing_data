@@ -16,15 +16,30 @@ load("project/dta/main_data.RData")
 
 
 # Tick labels
-xticks_linear <- c("β0", "β1", "β2", "μ(X3)")
-xticks_nonlinear <- c("β0", "β1", "β2", "β3", "μ(X3)")
+
+xticks_linear <- c(
+  expression(beta[0]),
+  expression(beta[1]),
+  expression(beta[2]),
+  expression(mu[3])
+)
+
+#xticks_linear <- c("β0", "β1", "β2", "μ(X3)")
+
+xticks_nonlinear <- c(
+  expression(beta[0]),
+  expression(beta[1]),
+  expression(beta[2]),
+  expression(beta[3]),
+  expression(mu[3])
+)
 
 # die Nummer entspricht den gewünschten percentages, also 3 => 30% etc.
-dfs_linear <- c(full_output[["1a"]][3], full_output[["1b"]][3], 
-                full_output[["1c"]][3], full_output[["1d"]][3])
+dfs_linear <- c(full_output[["1c"]][3], full_output[["1d"]][3],
+                full_output[["1a"]][3], full_output[["1b"]][3] )
 
-dfs_nonlinear <- c(full_output[["2a"]][3], full_output[["2b"]][3], 
-                   full_output[["2c"]][3], full_output[["2d"]][3])
+dfs_nonlinear <- c(full_output[["2c"]][3], full_output[["2d"]][3],
+                   full_output[["2a"]][3], full_output[["2b"]][3])
 
 #Muss potentiell angepasst werden, je nachdem wie dann die Reihenfolge ist:
 subtitles_lin <- c("MAR, 30 % Missings in X3 (Linear)",
@@ -38,15 +53,12 @@ subtitles_lin <- c("MAR, 30 % Missings in X3 (Linear)",
 #                   "MCAR, X1 - 20%, X2 - 50%, X3 - 30% (Nonlinear)")
 
 
-subtitles_nonlin <- c("MAR",
-                   "MAR, CE",
-                   "MCAR",
-                   "MCAR, CE")
+subtitles_nonlin <- c("MCAR",
+                   "MCAR with Chained Equations",
+                   "MAR",
+                   "MAR with Chained Equations")
 
-subtitles_lin <- c("MAR",
-                   "MAR, CE",
-                   "MCAR",
-                   "MCAR, CE")
+subtitles_lin <- subtitles_nonlin
 
 boxplots_nonlinear <- list()
 boxplots_linear <- list()
@@ -56,7 +68,7 @@ j <- 1
 for (df in dfs_linear) {
   boxplot <- mc$bias_boxplot(df, title = subtitles_lin[[i]],
                           xticks = xticks_linear,
-                        ylim = c(-0.35,0.55))
+                        ylim = c(-0.35,0.42))
   boxplots_linear[[i]] <- boxplot
   i <- i +1
 }
@@ -64,7 +76,7 @@ for (df in dfs_linear) {
 for (df in dfs_nonlinear) {
   boxplot <- mc$bias_boxplot(df, title = subtitles_nonlin[[j]],
                           xticks = xticks_nonlinear,
-                        ylim = c(-1,1))
+                        ylim = c(-1,0.65))
   boxplots_nonlinear[[j]] <- boxplot
   j <- j +1
 }
@@ -124,10 +136,12 @@ comb_boxplot_square_nonlin <- boxplots_nonlinear[[1]] + boxplots_nonlinear[[2]] 
 comb_boxplot_square_nonlin
 
 ### Prinzipieller Code zum Speichern der kombinierten Plots:
-ggsave("project/plots/bias_row_lin.png", comb_boxplot_row_lin)
-ggsave("project/plots/bias_square_lin.png", comb_boxplot_square_lin)
-ggsave("project/plots/bias_row_nonlin.png", comb_boxplot_row_nonlin)
-ggsave("project/plots/bias_square_nonlin.png", comb_boxplot_square_nonlin)
+#ggsave("project/plots/bias_row_lin.png", comb_boxplot_row_lin)
+ggsave("project/plots/bias_square_lin.pdf", comb_boxplot_square_lin, width = 15, height = 10, limitsize = F)
+
+
+#ggsave("project/plots/bias_row_nonlin.png", comb_boxplot_row_nonlin)
+ggsave("project/plots/bias_square_nonlin.pdf", comb_boxplot_square_nonlin, width = 15, height = 10, limitsize = F)
 # da muss aber vermutlich eh noch mit der Größe etc. experimentiert werden...
 # ich finds fast angenehmer, die plots ausm plotpane zu exportieren, da sieht
 # man die Größe besser - aber idk wie das bei Positron ist
