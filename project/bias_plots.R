@@ -1,6 +1,6 @@
 # Imports:
 ## Libraries.
-pacman::p_load(patchwork, dplyr, cowplot, gridExtra)
+pacman::p_load(patchwork,tidyverse, dplyr, cowplot, gridExtra)
 ## Eigener Code:
 plots <- new.env()
 sys.source("project/src/graph_functions.R", envir = plots)
@@ -96,7 +96,7 @@ comb_boxplot_square_lin <- boxplots_linear[[1]] + boxplots_linear[[2]] +
     title = expression("30 % Missings in "* X[3]),
     theme = theme(
       plot.title = element_text(
-        size = 16, face = "bold", hjust = 0.5
+        size = 20, face = "bold", hjust = 0.5
       )
     )
   )
@@ -121,7 +121,7 @@ comb_boxplot_square_nonlin <- boxplots_nonlinear[[1]] + boxplots_nonlinear[[2]] 
     title = expression("30 % Missings in "* X[3]),
     theme = theme(
       plot.title = element_text(
-        size = 16, face = "bold", hjust = 0.5
+        size = 20, face = "bold", hjust = 0.5
       )
     )
   )
@@ -132,6 +132,7 @@ comb_boxplot_square_nonlin
 
 ### Prinzipieller Code zum Speichern der kombinierten Plots:
 #ggsave("project/plots/bias_row_lin.png", comb_boxplot_row_lin)
+
 ggsave("project/plots/bias_square_lin.pdf", comb_boxplot_square_lin, width = 15, height = 10, limitsize = F)
 
 
