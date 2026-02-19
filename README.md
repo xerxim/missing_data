@@ -7,6 +7,40 @@ Wir – Simon Fehrenbach, Tom Goldschmidt und Alice Kar – erweitern darin die 
 Das Kernstück unserer Arbeit ist `mice.impute.cart_boot.R` (im src-Ordner). Dieses Skript enthält unsere mice-kompatible, gebootstrapte CART-Implementation.
 Der übrige Code im Repository dient der Evaluation des Ansatzes anhand mehrerer Monte-Carlo-Simulationen mit variierenden Parametern.
 
+## Projektstruktur
+
+```
+project-root/
+│
+├─ project/                         → Hauptordner
+│  │
+│  ├─ dev/                          → Experimentelle Vorarbeiten
+│  │
+│  ├─ dta/                          → Speicher für RData Objekte
+│  │  ├─ single/                    → Daten aus einzelnen Schritten
+│  │  └─ *.RData                    → Gesammte Daten eines Experiments
+│  │
+│  ├─ plots/                        → Diagramme
+│  │  ├─ old/                       → Nicht aktuelle Diagramme
+│  │  └─ *.pdf                      → Aktuelle Diagramme
+│  │
+│  ├─ src/                          → Funktionen
+│  │  ├─ old/                       → Nicht aktuelle Funktionen
+│  │  ├─ graph_functions.R          → Erstellen von Diagrammen
+│  │  ├─ mc_helpers.R               → Hilfsfunktionen für mc_study
+│  │  ├─ mc_study.R                 → Abstrakte Monte-Carlo-Simulation
+│  │  └─ mice.impute.cart_boot.R    → Erweiterte mice Unterfunktion
+│  │
+│  ├─ tst/                          → Tests
+│  │
+│  ├─ bias_plots.R                  → Erstellung der Bias Digramme
+│  ├─ coverage_plots.R              → Erstellung der Coverage Diagramme
+│  ├─ cycle_study.R                 → Untersuchung nach idealer Iterationszahl
+│  └─ main.R                        → Durchführung der Monte-Carlo-Simulationen
+│
+└─ *                                → Git Dateien
+```
+
 ## Zur Nutzung von KI
 
 
