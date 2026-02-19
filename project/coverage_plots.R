@@ -25,7 +25,7 @@ i1c <- full_output$`1c`
 i1d <- full_output$`1d`
 
 
-lin_cover <- mc$make_coverages_plot(c("i1c","i1d","i1a","i1b"), plot_names, row_labels = row_labels)
+lin_cover <- plots$make_coverages_plot(c("i1c","i1d","i1a","i1b"), plot_names, row_labels = row_labels)
 lin_cover
 
 ##### ii) INTERACTION DATA
@@ -50,7 +50,7 @@ plot_names <- c(
 )
 
 
-non_lin_cover <- mc$make_coverages_plot(c("iic", "iid","iia", "iib" ),
+non_lin_cover <- plots$make_coverages_plot(c("iic", "iid","iia", "iib" ),
   plot_names, row_labels = row_labels)
 
 non_lin_cover
