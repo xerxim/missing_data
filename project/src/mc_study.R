@@ -6,7 +6,7 @@ sys.source("project/src/mc_helpers.R", envir = helpers)
 #' Compare different mice methods.
 #' 
 #' @description This function compares different mice methods using a
-#' mc study. It generates data and missing values on its own.
+#' multithreaded mc study. It generates data and missing values on its own.
 #' 
 #' @param methods character. Method(s) to compare.
 #' @param m integer. Number of imputation every mice call.
@@ -28,14 +28,7 @@ sys.source("project/src/mc_helpers.R", envir = helpers)
 #'                            that influences missings for the corresponing column.
 #' @param seed numeric(1). Optional seed for reproducable rng.
 #'
-#' @return A list containing two data frames:
-#' \describe{
-#'   \item{estimates}{Pooled regression results for each cycle and method.
-#'   Includes parameter estimates, standard errors, confidence intervals,
-#'   bias, and coverage for the model defined by `formula`.}
-#'   \item{means}{Pooled mean estimates for each specified variable, cycle,
-#'   and method based on intercept-only models. Includes standard errors,
-#'   confidence intervals, bias, and coverage compared to `true_means`.}
+#' @return A dataframe containing pooled descriptive values for regression parameters and means.
 #' }#' @export
 mc_study_furrr <- function(
   methods, m, formula, true_vals, true_means,
@@ -128,7 +121,20 @@ mc_study_furrr <- function(
   results_df
 }
 
-
+#' Fit a linear model on imputations.
+#' 
+#' @description This function fits a linear model on imputation values and 
+#'              calculates the following pooled results for every coeficient:
+#'              estimate, std error, CI, bias, relative bias, cover (single coverage)
+#'              
+#' 
+#' @param imp mids(1). A mice mids object with the imptations to be fitted. 
+#' @param formula character(1). LM formula.
+#' @param method character(1). A string of the used mice method.
+#' @param cycle integer(1). A integer that notes the currently running cycle.
+#' @param true_vals named numeric. Vector containing true parameter values for all lm coefs.
+#'
+#' @return A dataframe containing pooled descriptive values for regression parameters.
 fit_lm <- function(
   imp, formula, method, cycle, true_vals
 ){
@@ -169,6 +175,22 @@ fit_lm <- function(
   lm_df
 }
 
+#' Calculate the means for imputation
+#' 
+#' @description This function calculates the pooled mean for given variables on 
+#'              imputation values and calculates the following pooled results
+#'              for every mean:
+#'              estimate, std error, CI, bias, relative bias, cover (single coverage)
+#'              For this it uses a linear model with fromula variable ~ 1.
+#'              
+#' 
+#' @param imp mids(1). A mice mids object with the imptations to be fitted. 
+#' @param method character(1). A string of the used mice method.
+#' @param cycle integer(1). A integer that notes the currently running cycle.
+#' @param true_means named numeric. Vector containing true mean(s) values for all 
+#'                                  variables that mean is needed for.
+#'
+#' @return A dataframe containing pooled descriptive values for means.
 fit_means <- function(
   imp, method, cycle, true_means
 ){
@@ -187,20 +209,20 @@ fit_means <- function(
   )
   # For every imputed variable.
   for(v in names(true_means)) {
-    # Get means.
+    # Create args for special fit_lm.
     formula <- paste(v, "~ 1")
     true_vals <- c(
       "(Intercept)" = true_means[[v]]
     )
-
+    # Fit.
     fit <- fit_lm(
       imp = imp, formula = formula,
       method = method, cycle = cycle, 
       true_vals = true_vals
     )
-
+    # Rename term.
     fit$term <- glue::glue("mu({v})")
-
+    # Add to df.
     means_df <- rbind(
       means_df,
       fit
