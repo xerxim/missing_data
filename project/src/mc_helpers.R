@@ -19,7 +19,6 @@
 #' @param seed integer(1). (Optional) Seed for reproducable results.
 #' 
 #' @return The input dataframe but with desired missing values.
-
 make_missing <- function(
   data, vars, methods, rates, aux = NULL, seed = NA
 ) {
@@ -69,6 +68,15 @@ make_missing <- function(
   data
 }
 
+#' Generate linear connected data.
+#' 
+#' @description This function generates linear connected data in 3 variables.
+#'              
+#' 
+#' @param n integer(1). N of generated data.
+#' @param seed integer(1). (Optional) Seed for reproducable results.
+#' 
+#' @return Dataframe with 3 variables.
 generate_data <- function(n, seed = NA) {
   # Set seed.
   if(!is.na(seed)) set.seed(seed)
@@ -81,8 +89,16 @@ generate_data <- function(n, seed = NA) {
   as.data.frame(cbind(X1, X2, X3))
 }
 
-### Data Generator nicht-lineare Daten
-
+#' Generate non linear connected data weak.
+#' 
+#' @description This function generates non linear connected data
+#'              in 3 variables with a weak interaction.
+#'              
+#' 
+#' @param n integer(1). N of generated data.
+#' @param seed integer(1). (Optional) Seed for reproducable results.
+#' 
+#' @return Dataframe with 3 variables.
 generate_data_nonlinear_weak <- function(n, seed = NA) {
   
   if(!is.na(seed)) set.seed(seed)
@@ -98,6 +114,16 @@ generate_data_nonlinear_weak <- function(n, seed = NA) {
   as.data.frame(cbind(X1, X2, X3))
 }
 
+#' Generate non linear connected data moderate.
+#' 
+#' @description This function generates non linear connected data
+#'              in 3 variables with a moderate interaction.
+#'              
+#' 
+#' @param n integer(1). N of generated data.
+#' @param seed integer(1). (Optional) Seed for reproducable results.
+#' 
+#' @return Dataframe with 3 variables.
 generate_data_nonlinear_moderate <- function(n, seed = NA) {
   
   if(!is.na(seed)) set.seed(seed)
@@ -113,7 +139,16 @@ generate_data_nonlinear_moderate <- function(n, seed = NA) {
   as.data.frame(cbind(X1, X2, X3))
 }
 
-
+#' Generate non linear connected data strong.
+#' 
+#' @description This function generates non linear connected data
+#'              in 3 variables with a strong interaction.
+#'              
+#' 
+#' @param n integer(1). N of generated data.
+#' @param seed integer(1). (Optional) Seed for reproducable results.
+#' 
+#' @return Dataframe with 3 variables.
 generate_data_nonlinear_strong <- function(n, seed = NA) {
   
   if(!is.na(seed)) set.seed(seed)
@@ -129,14 +164,14 @@ generate_data_nonlinear_strong <- function(n, seed = NA) {
   as.data.frame(cbind(X1, X2, X3))
 }
 
-
-
+# Fully AI generated functions for quick renaming of parameters.
+# Rename coef names by rules:
+# - "(Intercept)" -> "b0"
+# - "x<d>" / "X<d>" -> "b<d>"
+# - "<letters><d>" (excluding x/X) -> "b(d-1)"
+# - Otherwise -> "beta(<original>)"
 rename_coef_levels <- function(x) {
-  # Rename coef names by rules:
-  # - "(Intercept)" -> "b0"
-  # - "x<d>" / "X<d>" -> "b<d>"
-  # - "<letters><d>" (excluding x/X) -> "b(d-1)"
-  # - Otherwise -> "beta(<original>)"
+
 
   z <- as.character(x)
 
