@@ -3,7 +3,6 @@
 helpers <- new.env()
 sys.source("project/src/mc_helpers.R", envir = helpers)
 
-# Code:
 #' Compare different mice methods.
 #' 
 #' @description This function compares different mice methods using a
@@ -38,75 +37,6 @@ sys.source("project/src/mc_helpers.R", envir = helpers)
 #'   and method based on intercept-only models. Includes standard errors,
 #'   confidence intervals, bias, and coverage compared to `true_means`.}
 #' }#' @export
-mc_study <- function(
-  methods, m, formula, true_vals, true_means,
-  n, cycles, data_generator = helpers$generate_data,
-  miss_vars, miss, miss_rates, miss_aux = NULL, 
-  seed = NA
-){ 
-  # Check args.
-
-  # Initalize variables.
-  results <- list()
-  means_results <- list()
-  k <- 1L
-  # Initiate progress bar.
-  print("Running MC Study...")
-  cli::cli_progress_bar(
-    name = "MC",
-    total = cycles * length(methods),
-    format = "{cli::pb_bar} {cli::pb_percent} | ETA: {cli::pb_eta} | {cli::pb_rate}"
-  )
-  # Iterate over cycles.
-  for(cy in (1:cycles)){
-    # Generate Data.
-    if(!is.na(seed)) {
-      seed <- seed + cy
-    }
-    data <- data_generator(n = n, seed = seed)
-    # Create missings.
-    data_w_na <- helpers$make_missing(
-      data, vars = miss_vars,
-      methods = miss, rates = miss_rates,
-      aux = miss_aux, seed = seed
-    )
-    # Imputation for all methods.
-    for(method in methods) {
-      # Imputation.
-      imp <- mice::mice(
-        data_w_na, m = m, method = method,
-        printFlag = FALSE, seed = seed
-      )
-
-      # Fit means.
-      means_df <- fit_means(
-        imp = imp, 
-        method = method, cycle = cy, true_means = true_means
-      )
-      results[[k]] <- means_df
-
-      lm_df <- fit_lm(
-        imp = imp, formula = formula,
-        method = method, cycle = cy, 
-        true_vals = true_vals
-      )
-      results[[k + 1]] <- lm_df
-      
-      k <- k + 2
-      # Increase progress bar.
-      cli::cli_progress_update()
-    }
-  }
-  # Close bar.
-  cli::cli_progress_done()
-  print("Finished MC Study!")
-
-  # Create df.
-  results_df <- do.call(rbind, results)
-
-  results_df
-}
-
 mc_study_furrr <- function(
   methods, m, formula, true_vals, true_means,
   n, cycles, data_generator = helpers$generate_data,
@@ -278,44 +208,4 @@ fit_means <- function(
   }
 
   means_df
-}
-
-fit_means_old <- function(
-  imp, vars, method, cycle
-){
-  # Create sub df.
-  means_df <- data.frame(
-    cycle = integer(0),
-    method = character(0),
-    var = character(0),
-    mean = numeric(0),
-    se = numeric(0),
-    row.names = NULL
-  )
-  # For every imputed variable.
-  for(v in vars) {
-    # Get means.
-    f_mean <- paste(v, "~ 1")
-    fit_m  <- with(imp, lm(as.formula(f_mean)))
-    pooled <- summary(mice::pool(fit_m))
-    # Fill df.
-    means_df <- rbind(
-      means_df,
-      data.frame(
-        cycle = cycle,
-        method = method,
-        var = v,
-        mean = pooled$estimate[1],
-        se   = pooled$std.error[1],
-        row.names = NULL
-      )
-    )
-  }
-
-  means_df
-}
-
-freeze <- function(x, f) {
-  if (is.null(x)) return(NULL)
-  unname(f(x))
 }
