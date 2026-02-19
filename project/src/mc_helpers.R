@@ -313,3 +313,29 @@ make_coverages_plot <- function(list_names,
     
       return(combined_plot)
 }
+
+bias_boxplot <- function(df, xticks = c("β0", "β1", "β2", "μ(X3)"), title = "Relativer Bias", ylim = NULL){
+  
+ 
+p <- df %>% 
+    ggplot(aes(x = term, y = rel_bias, fill = method)) +
+    geom_boxplot() +
+    geom_hline(yintercept = 0, lty = 2) +
+    theme(
+      axis.text = element_text(size = 12),
+      axis.title = element_text(size = 12)
+    ) +
+    labs(x = "", y = "Relative Bias") +
+    ggtitle(title) +
+    scale_x_discrete(labels = xticks) +
+    theme_classic()
+  
+  # Only apply limits if user supplies them
+  if (!is.null(ylim)) {
+    p <- p + coord_cartesian(ylim = ylim)
+  }
+  
+  return(p)
+}
+
+  

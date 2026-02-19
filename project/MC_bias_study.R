@@ -10,16 +10,9 @@ source("project/src/mice.impute.cart_boot.R")
 # Working constants:
 plot_path <- "project/plots/" 
 
-# Activate multithreading
-future::plan(future::multicore, workers = (future::availableCores() - 2)) 
-# Activate progress bar
-progressr::handlers(global = TRUE)
-progressr::handlers(progressr::handler_cli(
-  format = "{cli::pb_bar} {cli::pb_percent} | ETA {cli::pb_eta}"
-))
 
 # Daten laden
-#load("...")
+load("project/dta/main_data.RData")
 
 
 # Tick labels
@@ -39,10 +32,21 @@ subtitles_lin <- c("MAR, 30 % Missings in X3 (Linear)",
                    "MCAR, 30% Missings in X3 (Linear)",
                    "MCAR, X1 - 20%, X2 - 50%, X3 - 30% (Linear)")
 
-subtitles_nonlin <- c("MAR, 30 % Missings in X3 (Nonlinear)",
-                   "MAR, Missings: X1 - 20%, X2 - 50%, X3 - 30% (Nonlinear)",
-                   "MCAR, 30% Missings in X3 (Nonlinear)",
-                   "MCAR, X1 - 20%, X2 - 50%, X3 - 30% (Nonlinear)")
+#subtitles_nonlin <- c("MAR, 30 % Missings in X3 (Nonlinear)",
+#                   "MAR, Missings: X1 - 20%, X2 - 50%, X3 - 30% (Nonlinear)",
+#                   "MCAR, 30% Missings in X3 (Nonlinear)",
+#                   "MCAR, X1 - 20%, X2 - 50%, X3 - 30% (Nonlinear)")
+
+
+subtitles_nonlin <- c("MAR",
+                   "MAR, CE",
+                   "MCAR",
+                   "MCAR, CE")
+
+subtitles_lin <- c("MAR",
+                   "MAR, CE",
+                   "MCAR",
+                   "MCAR, CE")
 
 boxplots_nonlinear <- list()
 boxplots_linear <- list()
@@ -50,15 +54,17 @@ i <- 1
 j <- 1
 
 for (df in dfs_linear) {
-  boxplot <- bias_boxplot(df, title = subtitles_lin[[i]],
-                          xticks = xticks_linear)
+  boxplot <- mc$bias_boxplot(df, title = subtitles_lin[[i]],
+                          xticks = xticks_linear,
+                        ylim = c(-0.35,0.55))
   boxplots_linear[[i]] <- boxplot
   i <- i +1
 }
 
 for (df in dfs_nonlinear) {
-  boxplot <- bias_boxplot(df, title = subtitles_nonlin[[j]],
-                          xticks = xticks_nonlinear)
+  boxplot <- mc$bias_boxplot(df, title = subtitles_nonlin[[j]],
+                          xticks = xticks_nonlinear,
+                        ylim = c(-1,1))
   boxplots_nonlinear[[j]] <- boxplot
   j <- j +1
 }
@@ -70,29 +76,52 @@ comb_boxplot_row_lin <- boxplots_linear[[1]] + boxplots_linear[[2]] +
   boxplots_linear[[3]] + boxplots_linear[[4]] +
   plot_layout(
     ncol = 4,
-    guides = "collect"
+    guides = "collect",
+    axis_titles = "collect"
   )
 
 comb_boxplot_square_lin <- boxplots_linear[[1]] + boxplots_linear[[2]] +
   boxplots_linear[[3]] + boxplots_linear[[4]] +
   plot_layout(
     ncol = 2,
-    guides = "collect"
+    guides = "collect",axis_titles = "collect"
+  ) +plot_annotation(
+    title = expression("30 % Missings in "* X[3]),
+    theme = theme(
+      plot.title = element_text(
+        size = 16, face = "bold", hjust = 0.5
+      )
+    )
   )
+
+comb_boxplot_square_lin
 
 comb_boxplot_row_nonlin <- boxplots_nonlinear[[1]] + boxplots_nonlinear[[2]] +
   boxplots_nonlinear[[3]] + boxplots_nonlinear[[4]] +
   plot_layout(
     ncol = 4,
-    guides = "collect"
+    guides = "collect",
+    axis_titles = "collect"
   )
 
 comb_boxplot_square_nonlin <- boxplots_nonlinear[[1]] + boxplots_nonlinear[[2]] +
   boxplots_nonlinear[[3]] + boxplots_nonlinear[[4]] +
   plot_layout(
     ncol = 2,
-    guides = "collect"
+    guides = "collect",
+    axis_titles = "collect"
+  ) +plot_annotation(
+    title = expression("30 % Missings in "* X[3]),
+    theme = theme(
+      plot.title = element_text(
+        size = 16, face = "bold", hjust = 0.5
+      )
+    )
   )
+
+
+
+comb_boxplot_square_nonlin
 
 ### Prinzipieller Code zum Speichern der kombinierten Plots:
 ggsave("project/plots/bias_row_lin.png", comb_boxplot_row_lin)
