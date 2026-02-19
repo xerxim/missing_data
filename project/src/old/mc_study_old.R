@@ -138,7 +138,4 @@ fit_means_old <- function(
   means_df
 }
 
-freeze <- function(x, f) {
-  if (is.null(x)) return(NULL)
-  unname(f(x))
-}
+

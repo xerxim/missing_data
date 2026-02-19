@@ -231,3 +231,18 @@ fit_means <- function(
 
   means_df
 }
+
+#' Unname not NULL variables and apply function. Weird magic.
+#' 
+#' @description This helper functions helps variables used in furr mapping to be
+#'              evaluated. Its ugly but i tried a lot and nothing else would work :(
+#'              
+#' 
+#' @param x any. Variable unname and given function is used on. 
+#' @param f function(1). Function to be applied before unname. Mostly as.(datatype).
+#'
+#' @return The unnamed variable with given function applied before.
+freeze <- function(x, f) {
+  if (is.null(x)) return(NULL)
+  unname(f(x))
+}
