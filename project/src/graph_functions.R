@@ -1,23 +1,34 @@
-# Function that feed on a vector with list names (each list should contain dfs that are an MC result) 
-# and displays coverage plots - Tom
+pacman::p_load(patchwork, dplyr, cowplot, gridExtra, ggplot2)
 
-make_coverages_plot <- function(list_names,
-                                  plot_names,
-                                  miss_perc = c(10, 20, 30, 40, 50),
-                                  row_labels = c("a","b","c","d"),
-                                  xlab = expression("Missing % in " * X[3])) {
-  
-  
-  # To store the final rows of plots (one per list in list_names)
+#' Create coverage plots.
+#' 
+#' @description This function creates a tiled coverage plot from a vector of lists of
+#'              mc study results with:
+#'              x-axis: missing % 
+#'              y-axis: coverage
+#'              tile: different datasets              
+#' 
+#' @param list_names character. Vector of names of mc study output lists with dfs.
+#' @param plot_names character. Vector if names for subplots.
+#' @param miss_perc numeric. Vector of variing missing %.
+#' @param row_labels character. Vector of row labels.
+#' @param xlab character(1). X-axis label as string.
+#' 
+#' @return Tiled coverage plot (ggplot2).
+make_coverages_plot <- function(
+  list_names, plot_names, miss_perc = c(10, 20, 30, 40, 50),
+  row_labels = c("a","b","c","d"), 
+  xlab = expression("Missing % in " * X[3])
+){
+  # Store the final rows of plots (one per list in list_names).
   all_plots <- vector("list", length(list_names))
   
-  # Loop over each list name
+  # Loop over each list name.
   for (L in seq_along(list_names)) {
-    
-    # Retrieve the actual list from the environment
+    # Retrieve the actual list from the environment.
     df_list <- get(list_names[L], envir = .GlobalEnv)
-    
-    # --- 1) Summaries per df in the list ---
+
+    # Summaries per df in the list.
     raw_list <- lapply(seq_along(df_list), function(k) {
       df_list[[k]] %>%
         group_by(method, term) %>%
@@ -28,13 +39,13 @@ make_coverages_plot <- function(list_names,
         mutate(missperc = miss_perc[k])
     })
     
-    # --- 2) Combine ---
+    # Combine.
     combined <- bind_rows(raw_list, .id = "source_id")
     
-    # --- 3) Split by parameter ---
+    # Split by parameter.
     param_list <- combined %>% group_split(term, .keep = TRUE)
     
-    # --- 4) Build plots for this list ---
+    # Build plots for this list.
     plots <- vector("list", length(param_list))
     
     for (i in seq_along(param_list)) {
@@ -54,10 +65,10 @@ make_coverages_plot <- function(list_names,
       }
     }
     
-    # --- 5) First plot gets y-label ---
+    # First plot gets y-label.
     plots[[1]] <- plots[[1]] + labs(y = "Coverage")
     
-    # --- 6) Last plot gets right-side annotation ---
+    # Last plot gets right-side annotation.
     last_idx <- length(plots)
     plots[[last_idx]] <- plots[[last_idx]] +
       scale_y_continuous(
@@ -71,20 +82,18 @@ make_coverages_plot <- function(list_names,
         axis.title.y.right = element_text(margin = margin(l = 8))
       )
     
-    # --- 7) Store in general plotlist
-    
+    # Store in general plotlist.
     all_plots[[L]] <- plots
   }
   
-# --- 8) Combine all plots ---
-
+  # Combine all plots.
   n_rows <- length(all_plots)
   n_cols <- unique(vapply(all_plots, length, integer(1)))
 
-  # Flatten list-of-lists into a single list of plots (row-major order)
+  # Flatten list-of-lists into a single list of plots (row-major order).
   flat_plots <- unlist(all_plots, recursive = FALSE)
 
-  # Arrange as a grid: columns = number of parameters, rows = number of lists
+  # Arrange as a grid: columns = number of parameters, rows = number of lists.
   combined_plot <-
     wrap_plots(flat_plots, ncol = n_cols) +
     plot_layout(
@@ -95,14 +104,29 @@ make_coverages_plot <- function(list_names,
     ) &
     theme(legend.position = "bottom")
 
-    
-      return(combined_plot)
+  # Return.
+  combined_plot
 }
 
-bias_boxplot <- function(df, xticks = c("β0", "β1", "β2", "μ(X3)"), title = "Relativer Bias", ylim = NULL){
-  
- 
-p <- df %>% 
+#' Create relative bias plot.
+#' 
+#' @description This function creates grouped boxplots if relative bias from a vector of
+#'              mc study results with:
+#'              x-axis: parameters and methods (groups) 
+#'              y-axis: relative bias
+#' 
+#' @param df vector of dataframe. Vector of dfs mc study output.
+#' @param xticks character. Vector of strings describing x ticks.
+#' @param title character. Vector of subtitles as strings.
+#' @param ylim numeric. Limits of y-axis.
+#' 
+#' @return Plot (ggplot2).
+bias_boxplot <- function(
+  df, xticks = c("β0", "β1", "β2", "μ(X3)"), 
+  title = "Relativer Bias", ylim = NULL
+){
+  # Create plot.
+  p <- df %>% 
     ggplot(aes(x = term, y = rel_bias, fill = method)) +
     geom_boxplot() +
     geom_hline(yintercept = 0, lty = 2) +
@@ -116,12 +140,13 @@ p <- df %>%
     ggtitle(title) +
     theme_classic()
   
-  # Only apply limits if user supplies them
+  # Only apply limits if user supplies them.
   if (!is.null(ylim)) {
     p <- p + coord_cartesian(ylim = ylim)
   }
   
-  return(p)
+  # Return.
+  p
 }
 
   
