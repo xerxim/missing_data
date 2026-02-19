@@ -1,82 +1,24 @@
-check_args <- function(data, vars, methods, rates, aux = NULL, seed = NULL){
+#' Create missing values in dataset.
+#' 
+#' @description This function created missing data using either MCAR, MAR or NMAR mechanisms.
+#'              
+#' 
+#' @param data dataframe(1). Dataframe to make missings in.
+#' @param vars character. Name(s) of column(s) where missings should be generated. 
+#' @param methods character. Same shape as vars. For every var a string describing 
+#'                           the missing mechanism desired for the corresponding 
+#'                           variable. 
+#' @param rates numeric. Same shape as vars. For every var a number between 0 and 1
+#'                       describing the desired proportions of missing values for the
+#'                       corresponding variable. 
+#' @param aux character. (Optional) Only used when one or more methods is "MAR". Same 
+#'                       shape as vars. For every var a string containing another 
+#'                       variable name that should have a proportional effect on the
+#'                       missingness of the corresponding variable.
 
-  # data must be a data.frame
-  if(!is.data.frame(data))
-    stop("`data` must be a data.frame.")
-
-
-  # vars: column names to modify
-  # must exist, no duplicates, at least one variable
-  if(missing(vars) || length(vars) == 0)
-    stop("`vars` must contain at least one column name.")
-
-  if(anyDuplicated(vars))
-    stop("Each variable in `vars` may appear only once.")
-
-  if(!all(vars %in% names(data)))
-    stop("All `vars` must exist in `data`.")
-
-  p <- length(vars)
-
-
-  # methods: length 1 or length(vars)
-  # allowed values: MCAR, MAR, NMAR (case-insensitive)
-  if(length(methods) == 1)
-    methods <- rep(methods, p)
-
-  if(length(methods) != p)
-    stop("`methods` must have length 1 or length(vars).")
-
-  methods <- tolower(methods)
-
-  if(!all(methods %in% c("mcar","mar","nmar")))
-    stop("`methods` must be one of: 'MCAR', 'MAR', 'NMAR' (case insensitive).")
-
-
-  # rates: length 1 or length(vars), numeric in (0,1)
-  if(length(rates) == 1)
-    rates <- rep(rates, p)
-
-  if(length(rates) != p)
-    stop("`rates` must have length 1 or length(vars).")
-
-  if(!is.numeric(rates) || any(rates <= 0 | rates >= 1))
-    stop("`rates` must be numeric values strictly between 0 and 1.")
-
-
-  # aux (auxiliary variables for MAR)
-  # allowed: NULL, single value, or vector length(vars)
-  # only required for variables with methods == MAR
-  if(!is.null(aux)){
-
-    if(length(aux) == 1)
-      aux <- rep(aux, p)
-
-    if(length(aux) != p)
-      stop("`aux` must be NULL, length 1, or length(vars).")
-
-    aux_check <- aux[methods == "mar"]
-
-    if(length(aux_check) > 0){
-      if(any(is.na(aux_check)))
-        stop("For MAR variables, `aux` cannot be NA.")
-
-      if(!all(aux_check %in% names(data)))
-        stop("All auxiliary variables must exist in `data`.")
-    }
-  }
-
-
-  # seed must be single numeric value if provided
-  if(!is.na(seed)){
-    if(length(seed) != 1 || !is.numeric(seed))
-      stop("`seed` must be a single numeric value.")
-  }
-
-
-  # return cleaned arguments
-  list(methods = methods, rates = rates, aux = aux)
-}
+#' @param seed integer(1). (Optional) Seed for reproducable results.
+#' 
+#' @return The input dataframe but with desired missing values.
 
 make_missing <- function(
   data, vars, methods, rates, aux = NULL, seed = NA
@@ -213,3 +155,82 @@ rename_coef_levels <- function(x) {
   if (is.factor(x)) { levels(x) <- out; x } else out
 }
 
+#' Check args for make_missings function.
+check_args <- function(data, vars, methods, rates, aux = NULL, seed = NULL){
+  # data must be a data.frame
+  if(!is.data.frame(data))
+    stop("`data` must be a data.frame.")
+
+
+  # vars: column names to modify
+  # must exist, no duplicates, at least one variable
+  if(missing(vars) || length(vars) == 0)
+    stop("`vars` must contain at least one column name.")
+
+  if(anyDuplicated(vars))
+    stop("Each variable in `vars` may appear only once.")
+
+  if(!all(vars %in% names(data)))
+    stop("All `vars` must exist in `data`.")
+
+  p <- length(vars)
+
+
+  # methods: length 1 or length(vars)
+  # allowed values: MCAR, MAR, NMAR (case-insensitive)
+  if(length(methods) == 1)
+    methods <- rep(methods, p)
+
+  if(length(methods) != p)
+    stop("`methods` must have length 1 or length(vars).")
+
+  methods <- tolower(methods)
+
+  if(!all(methods %in% c("mcar","mar","nmar")))
+    stop("`methods` must be one of: 'MCAR', 'MAR', 'NMAR' (case insensitive).")
+
+
+  # rates: length 1 or length(vars), numeric in (0,1)
+  if(length(rates) == 1)
+    rates <- rep(rates, p)
+
+  if(length(rates) != p)
+    stop("`rates` must have length 1 or length(vars).")
+
+  if(!is.numeric(rates) || any(rates <= 0 | rates >= 1))
+    stop("`rates` must be numeric values strictly between 0 and 1.")
+
+
+  # aux (auxiliary variables for MAR)
+  # allowed: NULL, single value, or vector length(vars)
+  # only required for variables with methods == MAR
+  if(!is.null(aux)){
+
+    if(length(aux) == 1)
+      aux <- rep(aux, p)
+
+    if(length(aux) != p)
+      stop("`aux` must be NULL, length 1, or length(vars).")
+
+    aux_check <- aux[methods == "mar"]
+
+    if(length(aux_check) > 0){
+      if(any(is.na(aux_check)))
+        stop("For MAR variables, `aux` cannot be NA.")
+
+      if(!all(aux_check %in% names(data)))
+        stop("All auxiliary variables must exist in `data`.")
+    }
+  }
+
+
+  # seed must be single numeric value if provided
+  if(!is.na(seed)){
+    if(length(seed) != 1 || !is.numeric(seed))
+      stop("`seed` must be a single numeric value.")
+  }
+
+
+  # return cleaned arguments
+  list(methods = methods, rates = rates, aux = aux)
+}
