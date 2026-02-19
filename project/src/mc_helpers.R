@@ -164,7 +164,7 @@ generate_data_nonlinear_strong <- function(n, seed = NA) {
   as.data.frame(cbind(X1, X2, X3))
 }
 
-# Fully AI generated functions for quick renaming of parameters.
+# Fully AI generated function for quick renaming of parameters.
 # Rename coef names by rules:
 # - "(Intercept)" -> "b0"
 # - "x<d>" / "X<d>" -> "b<d>"
@@ -190,7 +190,8 @@ rename_coef_levels <- function(x) {
   if (is.factor(x)) { levels(x) <- out; x } else out
 }
 
-#' Check args for make_missings function.
+# Mostly AI generated function.
+# Check args for make_missings function.
 check_args <- function(data, vars, methods, rates, aux = NULL, seed = NULL){
   # data must be a data.frame
   if(!is.data.frame(data))

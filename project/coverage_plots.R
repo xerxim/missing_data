@@ -1,11 +1,11 @@
 # Imports:
 ## Libraries.
 pacman::p_load(patchwork, dplyr, cowplot, gridExtra)
-## Eigener Code:
+## Code:
 plots <- new.env()
 sys.source("project/src/graph_functions.R", envir = plots)
 
-#data loading
+# Load data.
 load("project/dta/main_data.RData")
 
 
@@ -31,7 +31,6 @@ lin_cover
 ##### ii) INTERACTION DATA
 
 #MC Simulation Result import
-load("project/raw_mc_results/mc_raw_results_s=300_interaction_effects.RData")
 
 #
 iia <- full_output$`2a`
