@@ -1,11 +1,9 @@
 # Imports:
 ## Libraries.
-pacman::p_load(patchwork, tidyverse,cowplot,gridExtra)
+pacman::p_load(patchwork, dplyr, cowplot, gridExtra)
 ## Eigener Code:
-mc <- new.env()
-sys.source("project/src/mc_study.R", envir = mc)
-sys.source("project/src/mc_helpers.R", envir = mc)
-source("project/src/mice.impute.cart_boot.R")
+plots <- new.env()
+sys.source("project/src/graph_functions.R", envir = plots)
 
 #data loading
 load("project/dta/main_data.RData")
@@ -32,7 +30,7 @@ i1c <- full_output$`1c`
 i1d <- full_output$`1d`
 
 
-mc$make_coverages_plot(c("i1c","i1d","i1a","i1b"), plot_names, row_labels = c("MCAR", "MCAR, CE", "MAR", "MAR, CE"))
+plots$make_coverages_plot(c("i1c","i1d","i1a","i1b"), plot_names, row_labels = c("MCAR", "MCAR, CE", "MAR", "MAR, CE"))
 ##### ii) INTERACTION DATA
 
 #MC Simulation Result import
@@ -55,6 +53,6 @@ plot_names <- c(
 )
 
 
-mc$make_coverages_plot(c("iic", "iid","iia", "iib" ),
+plots$make_coverages_plot(c("iic", "iid","iia", "iib" ),
   plot_names, row_labels = c("MCAR", "MCAR, CE", "MAR", "MAR, CE"))
 

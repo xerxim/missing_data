@@ -5,7 +5,7 @@
 mc <- new.env()
 sys.source("project/src/mc_study.R", envir = mc)
 plots <- new.env()
-sys.source("project/dev/Alice/graph_functions.R", envir = plots)
+sys.source("project/src/old/plotting_old.R", envir = plots)
 source("project/src/mice.impute.cart_boot.R")
 # Working constants:
 plot_path <- "project/plots/" # Use file.path(plot_path, "plotname") to safe.
@@ -50,7 +50,7 @@ if(generate_data) {
 # Combine to single df.
 df_all <- purrr::map2_dfr(out, cycles, ~ dplyr::mutate(.x, cycles = .y))
 # Plot bias.
-bias_plot <- plots$bias_boxplot(df_all, title = "Relative Bias") +
+bias_plot <- plots$bias_boxplot(df_all, title = "Relative Bias", NULL) +
   ggplot2::facet_wrap(~ cycles)
 # Save plot.
 ggplot2::ggsave(
