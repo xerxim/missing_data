@@ -1,18 +1,13 @@
 # Imports:
 ## Libraries.
-pacman::p_load(patchwork, tidyverse, mice,cowplot,gridExtra)
+pacman::p_load(patchwork, dplyr, cowplot, gridExtra)
 ## Eigener Code:
-mc <- new.env()
-sys.source("project/src/mc_study.R", envir = mc)
-sys.source("project/src/mc_helpers.R", envir = mc)
-source("project/src/mice.impute.cart_boot.R")
+plots <- new.env()
+sys.source("project/src/graph_functions.R", envir = plots)
 
-# Working constants:
-plot_path <- "project/plots/" 
-
-
-# Daten laden
+#data loading
 load("project/dta/main_data.RData")
+
 
 
 # Tick labels
@@ -66,7 +61,7 @@ i <- 1
 j <- 1
 
 for (df in dfs_linear) {
-  boxplot <- mc$bias_boxplot(df, title = subtitles_lin[[i]],
+  boxplot <- plots$bias_boxplot(df, title = subtitles_lin[[i]],
                           xticks = xticks_linear,
                         ylim = c(-0.35,0.42))
   boxplots_linear[[i]] <- boxplot
@@ -74,7 +69,7 @@ for (df in dfs_linear) {
 }
 
 for (df in dfs_nonlinear) {
-  boxplot <- mc$bias_boxplot(df, title = subtitles_nonlin[[j]],
+  boxplot <- plots$bias_boxplot(df, title = subtitles_nonlin[[j]],
                           xticks = xticks_nonlinear,
                         ylim = c(-1,0.65))
   boxplots_nonlinear[[j]] <- boxplot
