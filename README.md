@@ -9,8 +9,6 @@ Der übrige Code im Repository dient der Evaluation des Ansatzes anhand mehrerer
 
 ## Setting der Simulationsstudie
 
-Wir haben unsere `cart_boot` Methode mit `cart` und `pmm` bei einem ansteigenden Anteil fehlender Werte in unserer Zielvariable $X_3$ unter unterschiedlichen missing data Mechanismen (MCAR / MAR) und zugrunde liegenden Datengenerierenden Prozessen (linear / mit Interaktionseffekt) evaluiert. Für jede Parameterkombination wurden $(S=) 500$ Datensätze auf der Basis des jeweiligen Datengenerierenden Prozesses mit $(n=) 500$ Beobachtungen generiert. Die Missings wurden entweder nur in $X_3$ (keine Chained Equation) oder in allen drei Variablen $X_1, X_2$ und  $X_3$ (mit Chained Equations) generiert. Bei MCAR erfolgte die Auswahl der Missings komplett zufällg, bei MAR war die Wahrscheinlichkeit das $X_3$ zum Missing wurde abhängig von $X_1$.
-
 Wir haben unsere `cart_boot` Methode gemeinsam mit `cart` und `pmm` bei einem steigenden Anteil fehlender Werte in der Zielvariable $X_3$ evaluiert. Die Untersuchung erfolgte unter verschiedenen Missing-Data-Mechanismen (MCAR / MAR) sowie unterschiedlichen datengenerierenden Prozessen (linear bzw. mit Interaktionseffekt).Für jede Parameterkombination wurden $S=500$ Datensätze mit jeweils $n=500$ Beobachtungen entsprechend des jeweiligen datengenerierenden Prozesses simuliert. Die fehlenden Werte wurden entweder ausschließlich in $X_3$ erzeugt (keine Chained Equations erforderlich) oder in allen drei Variablen $X_1$, $X_2$ und $X_3$ (Imputation mittels Chained Equations).
 
 Im MCAR-Szenario wurden die fehlenden Werte vollständig zufällig ausgewählt. Im MAR-Szenario hing die Wahrscheinlichkeit, dass $X_3$ fehlend ist, von $X_1$ ab.
