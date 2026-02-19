@@ -2,7 +2,7 @@
 
 Dieses Repository bildet die Grundlage unserer Prüfungsleistung **“Of mice and trees: towards proper MI using CART”** im Kurs Statistische Analyse unvollständiger Daten (WiSe 2025/26).
 
-Wir – Simon Fehrenbach (), Tom Goldschmidt ([tom-moritz.goldschmidt@stud.uni-bamberg.de](mailto:tom-moritz.goldschmidt@stud.uni-bamberg.de)) und Alice Kar – erweitern darin die CART-Implementation innerhalb der mice-Pipeline um ein Bootstrap-Resampling. Ziel ist es, den fehlenden P-Step zu approximieren, der in der aktuellen Funktion `mice.impute.cart` nicht berücksichtigt wird und somit implizit eine Between-Imputation-Varianz von 0 annimmt.
+Wir – Simon Fehrenbach ([simon_fehrenbach@stud.uni-bamberg.de](mailto:simon_fehrenbach@stud.uni-bamberg.de)), Tom Goldschmidt ([tom-moritz.goldschmidt@stud.uni-bamberg.de](mailto:tom-moritz.goldschmidt@stud.uni-bamberg.de)) und Alice Kar – erweitern darin die CART-Implementation innerhalb der mice-Pipeline um ein Bootstrap-Resampling. Ziel ist es, den fehlenden P-Step zu approximieren, der in der aktuellen Funktion `mice.impute.cart` nicht berücksichtigt wird und somit implizit eine Between-Imputation-Varianz von 0 annimmt.
 
 Das Kernstück unserer Arbeit ist `mice.impute.cart_boot.R` (im src-Ordner). Dieses Skript enthält unsere mice-kompatible, gebootstrapte CART-Implementation.
 Der übrige Code im Repository dient der Evaluation des Ansatzes anhand mehrerer Monte-Carlo-Simulationen mit variierenden Parametern.
