@@ -1,6 +1,8 @@
 load("project/dta/main_data.RData")
-
+##########################
 # Check if coverages match real parameters.
+##########################
+
 i_parameters <- c(
   "mu(X3)" = 12.8, "b0" = 5, "b1" = 0.6, 
   "b2" = 0.5
@@ -66,7 +68,10 @@ if(all(checks)){
   print("OK!")
 }
 
+##########################
 # Check structure.
+##########################
+
 size_table <- purrr::imap_dfr(full_output, function(dfs, exp_name)
   purrr::imap_dfr(dfs, function(df, df_name)
     tibble::tibble(
@@ -91,4 +96,40 @@ if(all(checks)){
   print("OK!")
 }
 
+##########################
 # Check if singles == full.
+##########################
+
+# Load singles.
+e <- new.env()
+files <- list.files("project/dta/single", pattern = "\\.RData$", full.names = TRUE)
+for (f in files) {
+  obj_name <- load(f, envir = e) 
+}
+
+check <- c(length(e) == length(full_output)) # Check if lengths are the same.
+if(!check){
+  print("singles and full length are not the same!!")
+}
+
+for(i in 1:length(e)){
+  single <- e[[ls(e)[[i]]]]
+  full <- full_output[[i]]
+  eq <- length(single) == length(full) # Check sublengths
+  if(!eq){
+    print(glue::glue("singles and full sublengths are not the same for i={i}"))
+  }
+  check <- c(check, eq)
+  for(j in 1:length(single)){
+    df_s <- single[[j]]
+    df_f <- full[[j]]
+    id <- identical(df_s, df_f)
+    if(!id){
+      print(glue::glue("single and full are not the same for i={i}, j={j}"))
+    }
+    check <- c(check, id)
+  }
+}
+if(all(checks)){
+  print("OK!")
+}
