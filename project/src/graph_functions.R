@@ -107,14 +107,17 @@ p <- df %>%
     geom_boxplot() +
     geom_hline(yintercept = 0, lty = 2) +
     scale_x_discrete(labels = xticks) +
-    theme(
-      axis.text = element_text(size = 12),
-      axis.title = element_text(size = 12),
-      axis.text.x = element_text(size = 20)
-    ) +
     labs(x = "", y = "Relative Bias") +
     ggtitle(title) +
-    theme_classic()
+    theme_classic()+
+  theme(
+      plot.title   = element_text(size = 17),
+      legend.title = element_text(size = 16),
+      legend.text  = element_text(size = 15),
+      axis.text = element_text(size = 15),
+      axis.title = element_text(size = 12),
+      axis.text.x = element_text(size = 15)
+    ) 
   
   # Only apply limits if user supplies them
   if (!is.null(ylim)) {
