@@ -1,3 +1,7 @@
+#' This is our extended cart function. 
+#' 
+#' This is an extension of the mice.impute.cart function. It adds a bootstrap step
+#' to imputations with cart.
 mice.impute.cart_boot <- function (y, ry, x, wy = NULL, minbucket = 5, cp = 1e-04, ...) 
 {
     #install.on.demand("rpart")
