@@ -66,5 +66,29 @@ if(all(checks)){
   print("OK!")
 }
 
+# Check structure.
+size_table <- purrr::imap_dfr(full_output, function(dfs, exp_name)
+  purrr::imap_dfr(dfs, function(df, df_name)
+    tibble::tibble(
+      experiment = exp_name,
+      dataset    = df_name,
+      nrow       = nrow(df),
+      ncol       = ncol(df)
+    )
+  )
+)
+size_table_1 <- dplyr::filter(size_table, stringr::str_starts(experiment, "1"))
+size_table_2 <- dplyr::filter(size_table, stringr::str_starts(experiment, "2"))
+
+checks <- c(
+  nrow(size_table) == 8 * 5, # Are all dfs generated?
+  all(size_table$ncol == 10), # DO all have every column?
+  all(size_table_1$nrow == 4 * 3 * 500), # exp 1 right ammount of rows? 4 parameters * 3 models * 500 cycles
+  all(size_table_2$nrow == 5 * 3 * 500) # exp 2 right ammount of rows? 5 parameters * 3 models * 500 cycles
+)
+
+if(all(checks)){
+  print("OK!")
+}
 
 # Check if singles == full.
